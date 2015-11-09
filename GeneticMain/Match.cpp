@@ -19,7 +19,9 @@ void Match::setPlayer2(AbstractPlayer* p) {
     player2 = p;
 }
 
-int Match::playOut() {}
+int Match::playOut() {
+    return 0;
+}
 int Match::checkWinConditions() {
     for(int i = 0; i < CELLS; i++) {
 
@@ -57,4 +59,5 @@ bool Match::checkForColumnWin(int cell) {
 
     int firstIndexInCol = (cell / COLUMNS) * COLUMNS;
     int lastIndexInCol = (cell / COLUMNS + 1) * COLUMNS - 1;
+    return false;
 }
