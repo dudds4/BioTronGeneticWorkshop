@@ -10,10 +10,12 @@ EXECUTABLE=build/geneticWorkshop
 ifneq (, $(findstring apple, $(SYS)))
 LIBRARY=build/libgenetic.so
 MOVE=mv
+LDFLAGS=-Lbuild -lgenetic
 REMOVE=rm -f build/*.o
 else ifneq (, $(findstring mingw, $(SYS)))
 LIBRARY=build/libgenetic.dll
 MOVE=move
+LDFLAGS=-Lbuild -llibgenetic
 REMOVE=del /q build
 else
 exit
@@ -22,7 +24,7 @@ endif
 all: $(EXECUTABLE)
 
 $(EXECUTABLE): build/main.o $(LIBRARY)
-	$(CC) build/main.o -Lbuild -llibgenetic -o $(EXECUTABLE) 
+	$(CC) build/main.o $(LDFLAGS) -o $(EXECUTABLE) 
 	$(EXECUTABLE)
 
 build/main.o: GeneticExec/main.cpp

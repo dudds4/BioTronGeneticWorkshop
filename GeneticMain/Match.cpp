@@ -27,6 +27,7 @@ int Match::checkWinConditions() {
 
 
     }
+    return 0;
 }
 
 bool Match::checkForRowWin(int cell) {

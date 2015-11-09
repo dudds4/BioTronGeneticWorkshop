@@ -1,7 +1,7 @@
 #include "GameSimulator.h"
 #include "Player.h"
 #include "DefaultPlayer.h"
-
+#include <iostream>
 
 GameSimulator::GameSimulator() {
     gameGrid = new int[CELLS];
@@ -17,6 +17,7 @@ GameSimulator::~GameSimulator() {
 int GameSimulator::exec() {
     DefaultPlayer dp;
     Player p;
+    std::cout << "Hello World\n";
     return 0;
 }
 
