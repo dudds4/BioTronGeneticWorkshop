@@ -5,7 +5,11 @@ CFLAGS=-c -Wall
 SRC=GeneticMain/*.cpp
 OBJS=$(SRC:GeneticMain/%.cpp=build/%.o) 
 
+TESTSRC=GeneticTest/*.cpp
+TESTOBJS=$(TESTSRC:GeneticTest/%.cpp=build/%.o) 
+
 EXECUTABLE=build/geneticWorkshop
+TESTEXECUTABLE=build/geneticWorkshopTest
 
 ifneq (, $(findstring apple, $(SYS)))
 LIBRARY=build/libgenetic.so
@@ -35,6 +39,16 @@ $(LIBRARY): $(OBJS)
 
 $(OBJS): $(SRC)
 	$(CC) $(CFLAGS) $(SRC)
+	$(MOVE) *.o build
+
+test: $(TESTEXECUTABLE)
+	
+$(TESTEXECUTABLE): $(TESTOBJS) $(LIBRARY)
+	$(CC) $(TESTOBJS) -Lbuild -llibgenetic -o $(TESTEXECUTABLE) 
+	$(TESTEXECUTABLE)
+	
+$(TESTOBJS): $(TESTSRC)
+	$(CC) $(CFLAGS) $(TESTSRC)
 	$(MOVE) *.o build
 	
 clean:
