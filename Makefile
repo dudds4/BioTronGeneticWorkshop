@@ -3,22 +3,24 @@ CC=g++
 CFLAGS=-c -Wall
 
 ifneq (, $(findstring apple, $(SYS)))
-EXECUTABLE=build/libgenetic.so
-all: $(EXECUTABLE)
+LIBRARY=build/libgenetic.so
+all: $(LIBRARY)
 
-$(EXECUTABLE): build/*.o
-	$(CC) $^ -shared -o $(EXECUTABLE)
+$(LIBRARY): build/*.o
+	$(CC) $^ -shared -o $(LIBRARY)
 
 build/%.o: GeneticMain/%.cpp 
 	$(CC) $(CFLAGS) -fPIC $< -o $@
-else ifneq (, $(findstring mingw, $(SYS)))
-all:
-	echo "MINGW"
-	$(CC) -o build/main.o -c GeneticExec/main.cpp -I GeneticMain
-	$(CC) -c GeneticMain/*.cpp
-	move *.o build
-	cd build
 	
+else ifneq (, $(findstring mingw, $(SYS)))
+LIBRARY=build/libgenetic.dll
+all: $(LIBRARY)
+
+$(LIBRARY): build/*.o
+	$(CC) $^ -shared -o $(LIBRARY)
+
+build/%.o: GeneticMain/%.cpp
+	$(CC) $(CFLAGS) $< -o $@
 	
 else ifneq (, $(findstring linux, $(SYS)))
 all:
