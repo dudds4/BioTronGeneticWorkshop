@@ -4,7 +4,7 @@
 #include "geneticmain_global.h"
 #include "globals.cpp"
 
-class GENETICMAINSHARED_EXPORT GameSimulator
+class GameSimulator
 {
 
 public:
