@@ -19,7 +19,7 @@ int DefaultPlayer::makeMove(int input[][7], int length) {
 DefaultPlayer* DefaultPlayer::mutate() {
     return new DefaultPlayer();
 }
-DefaultPlayer* DefaultPlayer::mate(DefaultPlayer*) {
+DefaultPlayer* DefaultPlayer::mate(AbstractPlayer*) {
     return new DefaultPlayer();
 }
 DefaultPlayer* DefaultPlayer::random() {

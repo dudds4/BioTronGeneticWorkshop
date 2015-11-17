@@ -16,6 +16,6 @@ Player* Player::fromFile(std::string) {
 }
 void Player::toFile(std::string) {}
 
-int Player::makeMove(int[][7], int) {
+int Player::makeMove(int[][7], int, int) {
 	return 1;
 }

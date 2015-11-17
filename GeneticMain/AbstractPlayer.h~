@@ -5,7 +5,7 @@
 
 class AbstractPlayer {
 	public:
-        	virtual int makeMove(int[][7], int) = 0;
+        	virtual int makeMove(int[][7], int, int) = 0;
 };
 
 #endif
