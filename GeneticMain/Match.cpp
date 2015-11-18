@@ -9,28 +9,29 @@ Match::Match(AbstractPlayer* p1, AbstractPlayer* p2) {
     player2 = p2;
 }
 
-Match::~Match() {
-    if(matchData) {
-        delete[] matchData;
-        matchData = NULL;
-    }
-}
+Match::~Match() {}
 
 void Match::setPlayer1(AbstractPlayer* p) {
     player1 = p;
+    p->setId(0);
 }
 void Match::setPlayer2(AbstractPlayer* p) {
     player2 = p;
+    p->setId(1);
 }
+
+void Match::applyMove(int column) {}
 
 int Match::playOut() { //Runs a match and returns the ID of the winner, 0 is a draw
     bool gameOver = false;
     int move = 0, winningPlayer = 0;
     do {
+        int column;
+        int playerId;
         if (move%2) {
-            column = player1.makeMove(matchData);
+            column = player1->makeMove(matchData, ROWS);
         } else {
-            column = player2.makeMove(matchData);
+            column = player2->makeMove(matchData, ROWS);
         }
         applyMove(column);
         gameOver = checkWinConditions(column);
@@ -41,9 +42,9 @@ int Match::playOut() { //Runs a match and returns the ID of the winner, 0 is a d
         return DRAW;
     else {
         if (move%2)
-            return player2.getId();
+            return player2->getId();
         else
-            return player1.getId();
+            return player1->getId();
     }
 }
 bool Match::checkWinConditions(int column) {
@@ -60,41 +61,86 @@ bool Match::checkWinConditions(int column) {
         checkForColumnWin(row,column) ||
         checkForDiagonalWin(row,column)
     ) {
-        return true
+        return true;
     }
     
     return false;
 }
 
 bool Match::checkForRowWin(int row, int column) {
-    if(cell >= CELLS || cell < 0) return false;
+    //TODO: false isn't an appropriate return value
+    if(row < 0 || row >= ROWS) return false;
+    if(column < 0 || column >= COLUMNS) return false;
 
     int consecutive = 1;
-    int playerNum = matchData[cell];
+    int playerNum = matchData[row][column];
 
-    int firstIndexInRow = (cell / COLUMNS) * COLUMNS;
-    int lastIndexInRow = (cell / COLUMNS + 1) * COLUMNS - 1;
+    int r = row;
+    while((--r) >= 0 && matchData[r][column] == playerNum)
+        consecutive+=1;
 
-    int i = cell - 1;
-    while(i >= firstIndexInRow && matchData[i] == playerNum) {
-        consecutive += 1;
-        i--;
-    }
-    i = cell + 1;
-    while(i <= lastIndexInRow && matchData[i] == playerNum) {
-        consecutive += 1;
-        i++;
-    }
+    r = row;
+    while((++r) < COLUMNS && matchData[r][column] == playerNum)
+        consecutive+=1;
+
     return consecutive > 3;
 }
 
 bool Match::checkForColumnWin(int row, int column) {
-    if(cell >= CELLS || cell < 0) return false;
+    //TODO: false isn't an appropriate return value
+    if(row < 0 || row >= ROWS) return false;
+    if(column < 0 || column >= COLUMNS) return false;
 
     int consecutive = 1;
-    int playerNum = matchData[cell];
+    int playerNum = matchData[row][column];
 
-    int firstIndexInCol = (cell / COLUMNS) * COLUMNS;
-    int lastIndexInCol = (cell / COLUMNS + 1) * COLUMNS - 1;
-    return false;
+    int c = column;
+    while((--c) >= 0 && matchData[row][c] == playerNum)
+        consecutive++;
+
+    c = column;
+    while((++c) < COLUMNS && matchData[row][c] == playerNum)
+        consecutive++;
+
+    return consecutive > 3;
+}
+
+bool Match::checkForDiagonalWin(int row, int column) {
+    //TODO: false isn't an appropriate return value
+    if(row < 0 || row >= ROWS) return false;
+    if(column < 0 || column >= COLUMNS) return false;
+
+    int consecutive = 1;
+    int playerNum = matchData[row][column];
+
+    //negative slope diagonal check
+    int r = row;
+    int c = column;
+    while(  (--r) >= 0 && 
+            (--c) >= 0 && 
+            matchData[r][c] == playerNum) 
+        consecutive++;
+
+    while(  (++r) < ROWS    && 
+            (++c) < COLUMNS && 
+            matchData[r][c] == playerNum) 
+        consecutive++;
+
+    if(consecutive > 3) return true;
+    
+    consecutive = 1;
+    r = row;
+    c = column;
+
+    while(  (++r) >= 0 && 
+            (--c) >= 0 && 
+            matchData[r][c] == playerNum) 
+        consecutive++;
+
+    while(  (--r) < ROWS    && 
+            (++c) < COLUMNS && 
+            matchData[r][c] == playerNum) 
+        consecutive++;
+
+    return consecutive > 3;
 }

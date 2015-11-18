@@ -1,9 +1,9 @@
 #include "AbstractPlayer.h"
 
-void setId(int id) {
+void AbstractPlayer::setId(int id) {
 	m_id = id;
 }
 
-int getId() {
+int AbstractPlayer::getId() {
 	return m_id;
 }
