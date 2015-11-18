@@ -46,7 +46,7 @@ int Match::playOut() { //Runs a match and returns the ID of the winner, 0 is a d
             return player1.getId();
     }
 }
-int Match::checkWinConditions(int column) {
+bool Match::checkWinConditions(int column) {
     int row = 6;
     while(row >= 0) {
         if (matchData[row][column] != 0) break;
@@ -66,7 +66,7 @@ int Match::checkWinConditions(int column) {
     return false;
 }
 
-bool Match::checkForRowWin(int cell) {
+bool Match::checkForRowWin(int row, int column) {
     if(cell >= CELLS || cell < 0) return false;
 
     int consecutive = 1;
@@ -88,7 +88,7 @@ bool Match::checkForRowWin(int cell) {
     return consecutive > 3;
 }
 
-bool Match::checkForColumnWin(int cell) {
+bool Match::checkForColumnWin(int row, int column) {
     if(cell >= CELLS || cell < 0) return false;
 
     int consecutive = 1;
