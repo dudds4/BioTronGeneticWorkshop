@@ -132,12 +132,12 @@ bool Match::checkForDiagonalWin(int row, int column) {
     r = row;
     c = column;
 
-    while(  (++r) >= 0 && 
+    while(  (++r) < ROWS &&
             (--c) >= 0 && 
             matchData[r][c] == playerNum) 
         consecutive++;
 
-    while(  (--r) < ROWS    && 
+    while(  (--r) >= 0    &&
             (++c) < COLUMNS && 
             matchData[r][c] == playerNum) 
         consecutive++;
