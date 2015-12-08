@@ -1,5 +1,10 @@
 #include "Player.h"
 
+Player* Player::copy() {
+	Player* newPlayer = new Player();
+	*(newPlayer) = *(this);
+}
+
 Player* Player::mutate() {
 	return new Player();
 }

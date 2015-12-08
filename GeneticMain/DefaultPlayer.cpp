@@ -29,5 +29,6 @@ DefaultPlayer* DefaultPlayer::random() {
 DefaultPlayer* DefaultPlayer::fromFile(std::string) {
     return new DefaultPlayer();
 }
+
 void DefaultPlayer::toFile(std::string) {}
 

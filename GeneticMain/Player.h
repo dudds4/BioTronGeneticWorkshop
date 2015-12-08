@@ -3,9 +3,11 @@
 
 #include "AbstractPlayer.h"
 
-class Player : AbstractPlayer {
+class Player : public AbstractPlayer {
 public:
+	float fitness;
 	Player* mutate();
+	Player* copy();
 	Player* mate(Player*);
 	static Player* random();
 	

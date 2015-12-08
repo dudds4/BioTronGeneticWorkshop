@@ -1,52 +1,86 @@
 #include "Match.h"
 #include "globals.cpp"
+#include <cstdlib>
+#include <ctime>
 
 Match::Match() {
+    srand(time(0));
+    moveNum = 0;
+    illegalMoves[0] = 0;
+    illegalMoves[1] = 0;
+    winningPlayer = NULL;
 }
 
 Match::Match(AbstractPlayer* p1, AbstractPlayer* p2) {
+    srand(time(0));
+    moveNum = 0;
     player1 = p1;
     player2 = p2;
+    player1->setId(1);
+    player2->setId(2);
+    illegalMoves[0] = 0;
+    illegalMoves[1] = 0;
+    winningPlayer = NULL;
 }
 
 Match::~Match() {}
 
 void Match::setPlayer1(AbstractPlayer* p) {
     player1 = p;
-    p->setId(0);
+    player1->setId(1);
 }
 void Match::setPlayer2(AbstractPlayer* p) {
     player2 = p;
-    p->setId(1);
+    player2->setId(2);
 }
 
-void Match::applyMove(int column) {}
-
-int Match::playOut() { //Runs a match and returns the ID of the winner, 0 is a draw
-    bool gameOver = false;
-    int move = 0, winningPlayer = 0;
-    do {
-        int column;
-        int playerId;
-        if (move%2) {
-            column = player1->makeMove(matchData, ROWS);
-        } else {
-            column = player2->makeMove(matchData, ROWS);
+bool Match::applyMove(int column, int playerId) {
+    for (int i=ROWS-1; i>=0; i++) {
+        if (matchData[i][column] == 0) {
+            matchData[i][column] = playerId;
+        } else if (i == 0) {
+            return false;
         }
-        applyMove(column);
-        gameOver = checkWinConditions(column);
-        move++;
-    } while(!gameOver && move < ROWS*COLUMNS);
+    }
+    return true;
+}
 
-    if (move == ROWS*COLUMNS)
+bool Match::playNextMove() {
+    int column;
+    AbstractPlayer* p = moveNum%2 ? player1 : player2;
+    column = p->makeMove(matchData, ROWS);
+
+    if (!applyMove(column, (moveNum%2)+1)) {
+        illegalMoves[moveNum%2]++;
+        if (illegalMoves[moveNum%2] > ILLEGAL_MOVE_THRESHOLD) {
+            winningPlayer = moveNum%2 ? player2 : player1;
+            return true;
+        }
+        do {
+            column = rand()%COLUMNS;
+        } while (!applyMove(column, (moveNum%2)+1));
+    }
+    if (checkWinConditions(column)) {
+        winningPlayer = p;
+        return true;
+    }
+    moveNum++;
+    return false;
+}
+
+int Match::playOut() { //Runs a match and returns the int of the winning player, 0 is a draw
+    bool gameOver = false;
+    do {
+        gameOver = playNextMove();
+    } while(!gameOver && moveNum < ROWS*COLUMNS);
+
+    if (!gameOver) {
         return DRAW;
-    else {
-        if (move%2)
-            return player2->getId();
-        else
-            return player1->getId();
+    } else {
+        return (winningPlayer == player1) ? 1 : 2;
     }
 }
+
 bool Match::checkWinConditions(int column) {
     int row = 6;
     while(row >= 0) {
@@ -143,4 +177,18 @@ bool Match::checkForDiagonalWin(int row, int column) {
         consecutive++;
 
     return consecutive > 3;
+}
+
+Player* Match::getWinningPlayer() {
+    return winningPlayer;
+}
+int Match::getNumMoves() {
+    return moveNum;
+}
+int Match::getIllegalMoves(Player* player) {
+    if (player == player1) {
+        return illegalMoves[0];
+    } else {
+        return illegalMoves[1];
+    }
 }

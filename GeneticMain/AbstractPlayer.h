@@ -4,7 +4,7 @@
 #include <string>
 
 class AbstractPlayer {
-	protected:
+	private:
 			int m_id;
 	public:
 			void setId(int);
