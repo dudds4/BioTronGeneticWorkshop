@@ -7,6 +7,7 @@ class AbstractPlayer {
 	private:
 			int m_id;
 	public:
+			virtual ~AbstractPlayer(){}
 			void setId(int);
 			int getId();
         	virtual int makeMove(int[][7], int) = 0;

@@ -2,14 +2,17 @@
 #include "globals.cpp"
 #include "Trainer.h"
 #include "Player.h"
-#include "Match.h"
+#include <algorithm>
 #include <cstdlib>
+#include <iostream>
 
 Player* Trainer::createOptimizedPlayer() {
 	generatePlayerPool();
 	for (int i=0; i<GENERATIONS; i++) {
+		std::cout << "100 years later... [Generation " << i+1 << " ]\n";
 		starTrekNextGeneration();
 	}
+	std::cout << "Finished all dat crazy generation shizz \n";
 	Player* bestPlayer = playerPool[0];
 	for (int i=1; i<POOL_SIZE; i++) {
 		if (simulateGames(playerPool[i], bestPlayer, GAMES_PER_MATCH) > GAMES_PER_MATCH/2) {
@@ -22,14 +25,15 @@ Player* Trainer::createOptimizedPlayer() {
 void Trainer::generatePlayerPool() {
 	for (int i=0; i<POOL_SIZE; i++) {
 		playerPool.push_back(Player::random());
+		statsPool.push_back(PlayerStats());
 	}
 }
 
 int Trainer::simulateGames(Player* player1, Player* player2, int numGames) {
 	int player1Wins = 0;
-	Match* matchUp = new Match(player1, player2);
 	for (int i=0; i<numGames; i++) {
-		if (matchUp->playOut() == 1) {
+		Match m(player1, player2);
+		if (m.playOut() == 1) {
 			player1Wins++;
 		}
 	}
@@ -41,28 +45,37 @@ void Trainer::starTrekNextGeneration() {
 	int numIndividuals = playerPool.size();
 	float leastFitness = 0, fitnessSum = 0;
 	
+	std::cout << "numIndividuals: " <<  numIndividuals << std::endl;
+
 	for (int i=0; i<numIndividuals; i++) {
 		for (int j=0; j<numIndividuals; j++) {
 			if (i != j) {
 				Match* matchUp = new Match(playerPool[i], playerPool[j]);
 				matchUp->playOut();
-				statsPool[i].addMatchStats(match, playerPool[i]);
-				statsPool[j].addMatchStats(match, playerPool[j]);
+//				std::cout << "Match played out successfully.\n";
+				statsPool[i].addMatchStats(matchUp, playerPool[i]);
+				statsPool[j].addMatchStats(matchUp, playerPool[j]);
+//				std::cout << "Match Stats added successfully.\n";
 			}
 		}
 	}
+	std::cout << "Matches played. \n";
+	
 	for (int i=0; i<numIndividuals; i++) {
-		playerPool[i]->fitness = fitness(statsPool[i]);
+		playerPool[i]->fitness = statsPool[i].getFitness();
 		fitnessSum += playerPool[i]->fitness;
 		if (playerPool[i]->fitness < leastFitness || i == 0) {
 			leastFitness = playerPool[i]->fitness;
 		}
 	}
+	std::cout << "Fitnesses computed. \n";
+	
 	fitnessSum += (-1)*leastFitness*numIndividuals;
 	for (int i=0; i<numIndividuals; i++) {
 		playerPool[i]->fitness = (playerPool[i]->fitness - leastFitness)/fitnessSum;
 	}
 	std::sort(playerPool.begin(), playerPool.end(), compare);
+	std::cout << "Player pool sorted. \n";
 
 	std::vector <Player*> newPool;
 	for (int i=0; i<numIndividuals/4; i++) {
@@ -73,9 +86,12 @@ void Trainer::starTrekNextGeneration() {
 			if(accumulatedSum > R) {
 				newPool.push_back(playerPool[j]->copy());
 				newPool.push_back(playerPool[j]->mutate());
+
+				j = numIndividuals;
 			}
 		}
 	}
+
 	int size = newPool.size();
 	for (int i=0; i<size-2; i+=2) {
 		newPool.push_back(playerPool[i]->mate(playerPool[i+2]));
@@ -85,33 +101,39 @@ void Trainer::starTrekNextGeneration() {
 	}
 
 	int idx = 0;
-	while (newPool.size() < numIndividuals) {
+	while (newPool.size() < (unsigned int)numIndividuals) {
 		newPool.push_back(playerPool[idx]->copy());
 		idx++;
 	}
 
 	Player* player;
 	while (playerPool.size() > 0) {
-		player = playerPool.pop_back()
+		player = playerPool.back();
+		playerPool.pop_back();
 		delete (player);
 	}
 	playerPool = newPool;
+	std::cout << "New pool created. \n";
+
+	for(unsigned int i = 0; i < statsPool.size(); i++)
+		statsPool[i] = PlayerStats();
 }
 
 bool compare(Player* p1, Player* p2) {
 	return p1->fitness > p2->fitness;
 }
 
-float fitness(PlayerStats ps) {
-	float games = ps.games;
-	float moves = ps.moves;
-	return WIN_WIGHT*ps.wins/games + DRAW_WIEGHT*ps.draws/games - ILLEGAL_WEIGHT*ps.illegalMoves/moves;
+float Trainer::PlayerStats::getFitness() {
+	if(games == 0) std::cout << "Finna divide bai zero faaaaaaaack (games)\n";
+	if(numMoves == 0) std::cout << "Finna divide bai zero faaaaaaaack (numMoves)\n";
+
+	return WIN_WEIGHT*wins/games + DRAW_WEIGHT*draws/games - ILLEGAL_WEIGHT*illegalMoves/numMoves;
 }
 
 void Trainer::PlayerStats::addMatchStats(Match* match, Player* player) {
 	wins += (match->getWinningPlayer() == player);
 	draws += (match->getWinningPlayer() == NULL);
 	games++;
-	moves += match->getNumMoves();
-	illegalMoves += getIllegalMoves(player);
+	numMoves += match->getNumMoves();
+	illegalMoves += match->getIllegalMoves(player);
 }

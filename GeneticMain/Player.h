@@ -5,6 +5,8 @@
 
 class Player : public AbstractPlayer {
 public:
+	Player();
+
 	float fitness;
 	Player* mutate();
 	Player* copy();

@@ -14,7 +14,7 @@ const int POOL_SIZE = 100;
 const int GAMES_PER_MATCH = 20;
 const int ILLEGAL_MOVE_THRESHOLD = 10;
 
-const int WIN_WIEGHT = 3; // tinker at will.
+const int WIN_WEIGHT = 3; // tinker at will.
 const int DRAW_WEIGHT = 1;
 const int ILLEGAL_WEIGHT = 5;
 

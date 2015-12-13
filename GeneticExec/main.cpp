@@ -1,6 +1,12 @@
-#include "GameSimulator.h"
-
+#include "Trainer.h"
+#include "Player.h"
+#include <iostream>
 int main() {
-    GameSimulator simulator;
-    return simulator.exec();
+    
+	Trainer ash_ketchum;
+	Player* pickachu = ash_ketchum.createOptimizedPlayer();
+	std::cout << "Made out of optimization. \n";
+	pickachu->toFile("pickachu.txt");
+
+    return 0;
 }

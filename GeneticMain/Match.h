@@ -13,9 +13,9 @@ public:
     void setPlayer2(AbstractPlayer*);
     int playOut();
     bool playNextMove();
-    Player* getWinningPlayer();
+    AbstractPlayer* getWinningPlayer();
     int getNumMoves();
-    int getIllegalMoves(Player* player);
+    int getIllegalMoves(AbstractPlayer* player);
     static const int ROWS = 6;
     static const int COLUMNS = 7;
 private:
@@ -26,10 +26,11 @@ private:
     AbstractPlayer* player2;
     int matchData[ROWS][COLUMNS];
 
+    void printBoard();
     bool checkWinConditions(int);
     bool applyMove(int column, int playerId);
-    bool checkForRowWin(int,int);
-    bool checkForColumnWin(int,int);
+    bool checkForVerticalWin(int,int);
+    bool checkForHorizontalWin(int,int);
     bool checkForDiagonalWin(int,int);
 };
 
