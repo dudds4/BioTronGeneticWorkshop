@@ -6,7 +6,7 @@
 
 Match::Match() {
     srand(time(0));
-    moveNum = 0;
+    moveNum = -1;
     illegalMoves[0] = 0;
     illegalMoves[1] = 0;
     winningPlayer = NULL;
@@ -17,7 +17,7 @@ Match::Match() {
 
 Match::Match(AbstractPlayer* p1, AbstractPlayer* p2) {
     srand(time(0));
-    moveNum = 0;
+    moveNum = -1;
     player1 = p1;
     player2 = p2;
     player1->setId(1);
@@ -56,8 +56,9 @@ bool Match::applyMove(int column, int playerId) {
 bool Match::playNextMove() {
     int column;
     AbstractPlayer* p = moveNum%2 ? player1 : player2;
-    column = p->makeMove(matchData, ROWS);
+
     moveNum++;
+    column = p->makeMove(matchData, (moveNum%2)+1);
     
     if (!applyMove(column, (moveNum%2)+1)) {
         illegalMoves[moveNum%2]++;
@@ -69,8 +70,13 @@ bool Match::playNextMove() {
             column = rand()%COLUMNS;
         } while (!applyMove(column, (moveNum%2)+1));
     }
-    if (checkWinConditions(column)) {
+
+    int winCond = checkWinConditions(column);
+    if (winCond == 1) {
         winningPlayer = p;
+        return true;
+    } else if (winCond == ERROR) {
+        winningPlayer = NULL;
         return true;
     }
     return false;
@@ -81,6 +87,7 @@ int Match::playOut() {
     bool gameOver = false;
     do {
         gameOver = playNextMove();
+        printBoard();
     } while(!gameOver && moveNum < ROWS*COLUMNS);
 
     if (!gameOver) {
@@ -90,29 +97,24 @@ int Match::playOut() {
     }
 }
 
-bool Match::checkWinConditions(int column) {
-    int row = 6;
-    while(row >= 0) {
+int Match::checkWinConditions(int column) {
+    int row = 0;
+    while(row < ROWS) {
         if (matchData[row][column] != 0) break;
-        row--;
+        row++;
     } 
 
-    if (row == -1) {
+    if (row == ROWS) {
         std::cout << "checkWinConditions:: Returning error\n";
         return ERROR;
     }
-
-    if (
-        checkForVerticalWin(row,column) ||
+    if (checkForVerticalWin(row,column) ||
         checkForHorizontalWin(row,column) ||
-        checkForDiagonalWin(row,column)
-    ) {
-        if(moveNum == 1)
-            std::cout << "Move num == 1\n";
-        return true;
+        checkForDiagonalWin(row,column)) {
+        return 1;
+    } else {
+        return 0;
     }
-    
-    return false;
 }
 
 void Match::printBoard() {
@@ -181,6 +183,8 @@ bool Match::checkForDiagonalWin(int row, int column) {
             matchData[r][c] == playerNum) 
         consecutive++;
 
+    r = row;
+    c = column;
     while(  (++r) < ROWS    && 
             (++c) < COLUMNS && 
             matchData[r][c] == playerNum) 
@@ -197,6 +201,8 @@ bool Match::checkForDiagonalWin(int row, int column) {
             matchData[r][c] == playerNum) 
         consecutive++;
 
+    r = row;
+    c = column;
     while(  (--r) >= 0    &&
             (++c) < COLUMNS && 
             matchData[r][c] == playerNum) 

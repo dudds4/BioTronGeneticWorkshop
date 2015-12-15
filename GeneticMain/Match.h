@@ -27,7 +27,7 @@ private:
     int matchData[ROWS][COLUMNS];
 
     void printBoard();
-    bool checkWinConditions(int);
+    int checkWinConditions(int);
     bool applyMove(int column, int playerId);
     bool checkForVerticalWin(int,int);
     bool checkForHorizontalWin(int,int);
