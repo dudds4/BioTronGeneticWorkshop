@@ -12,35 +12,43 @@ Window {
         color: "gray"
         anchors.fill: parent
 
-        Row {
-            id: insertionUIthings
-            width: parent.width * 2 / 3
-            x: parent.width / 6
-            y: 20
-            height: 50
+//        Row {
+//            id: insertionUIthings
+//            width: parent.width * 2 / 3
+//            x: parent.width / 6
+//            y: 20
+//            height: 50
 
-            Repeater {
-                model: 7
-                Rectangle {
-                    color: "#555555"
-                    width: parent.width / 7
-                    height: 50
-                    radius: 10
+//            Repeater {
+//                model: 7
+//                Rectangle {
+//                    color: "#555555"
+//                    width: parent.width / 7
+//                    height: 50
+//                    radius: 10
 
-                    Text {
-                       text: "Insert Column: " + index
-                       anchors.centerIn: parent
-                       width: parent.width
-                       wrapMode: Text.WordWrap
-                    }
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            BoardController.insertAtColumn(index);
-                        }
-                    }
-                }
-            }
+//                    Text {
+//                       text: "Insert Column: " + index
+//                       anchors.centerIn: parent
+//                       width: parent.width
+//                       wrapMode: Text.WordWrap
+//                    }
+//                    MouseArea {
+//                        anchors.fill: parent
+//                        onClicked: {
+//                            BoardController.insertAtColumn(index);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+
+        Text {
+            text: "Connect 4"
+            x: parent.width / 2 - width / 2
+            y: 10
+            font.pointSize: 20
+            color: "#333333"
         }
 
         Column {
@@ -62,26 +70,26 @@ Window {
             }
         }
 
-        Rectangle {
-            color: "#0000D0"
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            width: 100
-            height: 50
-            radius: 7
+//        Rectangle {
+//            color: "#0000D0"
+//            anchors.right: parent.right
+//            anchors.bottom: parent.bottom
+//            width: 100
+//            height: 50
+//            radius: 7
 
-            Text {
-                anchors.centerIn: parent
-                text: "Reset board"
-            }
+//            Text {
+//                anchors.centerIn: parent
+//                text: "Reset board"
+//            }
 
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    BoardController.reset();
-                }
-            }
-        }
+//            MouseArea {
+//                anchors.fill: parent
+//                onClicked: {
+//                    BoardController.reset();
+//                }
+//            }
+//        }
     }
 }
 

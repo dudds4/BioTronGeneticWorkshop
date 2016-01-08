@@ -8,12 +8,29 @@ BoardController::BoardController(QObject *parent) : QObject(parent)
             board[i][j] = 0;
     }
     turnNumber = 0;
+    initializeMatchAndPlayers();
+    timer = new QTimer();
+    timer->setInterval(200);
+    timer->setSingleShot(false);
+    connect(timer, &QTimer::timeout, this, &BoardController::progressMove);
+    timer->start();
 }
+BoardController::~BoardController() {
+    if(p1) delete p1;
+    if(p2) delete p2;
 
+    p1 = NULL;
+    p2 = NULL;
+
+    delete timer;
+    timer = NULL;
+}
 
 QVariantList BoardController::gameBoard() {
    //qDebug() << "gettingBoard for qml";
     QList<QVariant> result;
+    internalMatch.copyBoardOut(board, 6);
+
     for(int i = 0; i < 6; i++) {
         for(int j = 0; j < 7; j++)
             result.append(board[i][j]);
@@ -21,7 +38,27 @@ QVariantList BoardController::gameBoard() {
     return result;
 }
 
+void BoardController::initializeMatchAndPlayers() {
+    p1 = Player::fromFile("p1File.txt");
+    p2 = Player::fromFile("p2File.txt");
+
+    internalMatch.setPlayer1(p1);
+    internalMatch.setPlayer2(p2);
+}
+
+void BoardController::progressMove() {
+    bool done = internalMatch.playNextMove();
+    emit boardChanged();
+    if(done) {
+        timer->stop();
+        qDebug() << "Game Over";
+    }
+}
+
 void BoardController::reset() {
+    qDebug() << "Not really relevant";
+    return;
+
     for(int i = 0; i < 6; i++) {
         for(int j = 0; j < 7; j++)
             board[i][j] = 0;

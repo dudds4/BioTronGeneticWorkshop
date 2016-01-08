@@ -6,6 +6,9 @@
 class Match
 {
 public:
+    static const int ROWS = 6;
+    static const int COLUMNS = 7;
+	
     Match();
     Match(AbstractPlayer*, AbstractPlayer*);
     ~Match();
@@ -13,13 +16,15 @@ public:
     void setPlayer2(AbstractPlayer*);
     int playOut();
     bool playNextMove();
+	bool copyBoardOut(int[][COLUMNS], int);
+	
     AbstractPlayer* getWinningPlayer();
     int getNumMoves();
     int getIllegalMoves(AbstractPlayer* player);
-    static const int ROWS = 6;
-    static const int COLUMNS = 7;
+
 private:
     int moveNum;
+    bool m_gameOver = false;
     AbstractPlayer* winningPlayer;
     int illegalMoves[2];
     AbstractPlayer* player1;

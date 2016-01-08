@@ -10,6 +10,7 @@ Match::Match() {
     illegalMoves[0] = 0;
     illegalMoves[1] = 0;
     winningPlayer = NULL;
+    m_gameOver = false;
 
     for(int i = 0; i < ROWS * COLUMNS; i++)
         ((int*)matchData)[i] = 0;
@@ -25,6 +26,7 @@ Match::Match(AbstractPlayer* p1, AbstractPlayer* p2) {
     illegalMoves[0] = 0;
     illegalMoves[1] = 0;
     winningPlayer = NULL;
+    m_gameOver = false;
 
     for(int i = 0; i < ROWS * COLUMNS; i++)
         ((int*)matchData)[i] = 0;
@@ -54,6 +56,10 @@ bool Match::applyMove(int column, int playerId) {
 }
 
 bool Match::playNextMove() {
+    if(m_gameOver) {
+        return true;
+    }
+
     int column;
     AbstractPlayer* p = moveNum%2 ? player1 : player2;
 
@@ -64,6 +70,7 @@ bool Match::playNextMove() {
         illegalMoves[moveNum%2]++;
         if (illegalMoves[moveNum%2] > ILLEGAL_MOVE_THRESHOLD) {
             winningPlayer = moveNum%2 ? player2 : player1;
+            m_gameOver = true;
             return true;
         }
         do {
@@ -74,12 +81,24 @@ bool Match::playNextMove() {
     int winCond = checkWinConditions(column);
     if (winCond == 1) {
         winningPlayer = p;
+        m_gameOver = true;
         return true;
     } else if (winCond == ERROR) {
         winningPlayer = NULL;
+        m_gameOver = true;
         return true;
     }
     return false;
+}
+
+bool Match::copyBoardOut(int copy[][COLUMNS], int rowCount) {
+	if (rowCount != ROWS) return false;
+	
+	for(int i = 0; i < ROWS; i++)
+		for(int j = 0; j < COLUMNS; j++)
+			copy[i][j] = matchData[i][j];
+		
+	return true;
 }
 
 //Runs a match and returns the int of the winning player, 0 is a draw
@@ -87,7 +106,7 @@ int Match::playOut() {
     bool gameOver = false;
     do {
         gameOver = playNextMove();
-        printBoard();
+        //printBoard();
     } while(!gameOver && moveNum < ROWS*COLUMNS);
 
     if (!gameOver) {
@@ -95,6 +114,7 @@ int Match::playOut() {
     } else {
         return (winningPlayer == player1) ? 1 : 2;
     }
+    m_gameOver = true;
 }
 
 int Match::checkWinConditions(int column) {

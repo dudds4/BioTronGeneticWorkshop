@@ -4,7 +4,11 @@ QT += qml quick
 CONFIG += c++11
 
 SOURCES += main.cpp \
-    BoardController.cpp
+    BoardController.cpp \
+    ../GeneticMain/AbstractPlayer.cpp \
+    ../GeneticMain/Match.cpp \
+    ../GeneticMain/Player.cpp
+
 
 RESOURCES += qml.qrc
 
@@ -12,5 +16,8 @@ RESOURCES += qml.qrc
 include(deployment.pri)
 
 HEADERS += \
-    BoardController.h
+    BoardController.h \
+    ../GeneticMain/AbstractPlayer.h \
+    ../GeneticMain/Match.h \
+    ../GeneticMain/Player.h
 

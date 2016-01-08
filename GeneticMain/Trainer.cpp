@@ -4,6 +4,7 @@
 #include "Player.h"
 #include <algorithm>
 #include <cstdlib>
+#include <ctime>
 #include <iostream>
 
 Player* Trainer::createOptimizedPlayer() {
