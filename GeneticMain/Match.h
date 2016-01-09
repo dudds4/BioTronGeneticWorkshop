@@ -15,6 +15,7 @@ public:
     void setPlayer1(AbstractPlayer*);
     void setPlayer2(AbstractPlayer*);
     int playOut();
+    int playOutVerbose();
     bool playNextMove();
 	bool copyBoardOut(int[][COLUMNS], int);
 	
@@ -24,12 +25,13 @@ public:
 
 private:
     int moveNum;
-    bool m_gameOver = false;
+    bool m_gameOver;
     AbstractPlayer* winningPlayer;
     int illegalMoves[2];
     AbstractPlayer* player1;
     AbstractPlayer* player2;
     int matchData[ROWS][COLUMNS];
+    int m_test;
 
     void printBoard();
     int checkWinConditions(int);

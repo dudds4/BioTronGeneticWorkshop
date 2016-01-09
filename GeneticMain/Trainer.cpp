@@ -12,14 +12,22 @@ Player* Trainer::createOptimizedPlayer() {
 	for (int i=0; i<GENERATIONS; i++) {
 		std::cout << "100 years later... [Generation " << i+1 << " ]\n";
 		starTrekNextGeneration();
+		std::cout << std::flush;
 	}
 	std::cout << "Finished all dat crazy generation shizz \n";
 	Player* bestPlayer = playerPool[0];
+	Player* secondBestPlayer = playerPool[1];
 	for (int i=1; i<POOL_SIZE; i++) {
 		if (simulateGames(playerPool[i], bestPlayer, GAMES_PER_MATCH) > GAMES_PER_MATCH/2) {
+			secondBestPlayer = bestPlayer;
 			bestPlayer = playerPool[i];
 		}
 	}
+
+	std::cout << "Optimized players match up \n";
+	Match m(bestPlayer, secondBestPlayer);
+	m.playOutVerbose();
+
 	return bestPlayer;
 }
 
@@ -46,21 +54,27 @@ void Trainer::starTrekNextGeneration() {
 	int numIndividuals = playerPool.size();
 	float leastFitness = 0, fitnessSum = 0;
 	
-	std::cout << "numIndividuals: " <<  numIndividuals << std::endl;
+//	std::cout << "numIndividuals: " <<  numIndividuals << std::endl;
 
 	for (int i=0; i<numIndividuals; i++) {
+
 		for (int j=0; j<numIndividuals; j++) {
-			if (i != j) {
+			if(i!=j) {
+
 				Match* matchUp = new Match(playerPool[i], playerPool[j]);
+					
+	//			std::cout << "About to play out match \n";
 				matchUp->playOut();
-//				std::cout << "Match played out successfully.\n";
+				//std::cout << "Match played out successfully. (" << i << ", " << j <<  ")\n";
 				statsPool[i].addMatchStats(matchUp, playerPool[i]);
 				statsPool[j].addMatchStats(matchUp, playerPool[j]);
-//				std::cout << "Match Stats added successfully.\n";
+	//			std::cout << "Match Stats added successfully.\n";
+				
 			}
 		}
+		//std::cout << "Player " << i << " played out matches \n";
 	}
-	std::cout << "Matches played. \n";
+//	std::cout << "Matches played. \n";
 	
 	for (int i=0; i<numIndividuals; i++) {
 		playerPool[i]->fitness = statsPool[i].getFitness();
@@ -69,14 +83,14 @@ void Trainer::starTrekNextGeneration() {
 			leastFitness = playerPool[i]->fitness;
 		}
 	}
-	std::cout << "Fitnesses computed. \n";
+//	std::cout << "Fitnesses computed. \n";
 	
 	fitnessSum += (-1)*leastFitness*numIndividuals;
 	for (int i=0; i<numIndividuals; i++) {
 		playerPool[i]->fitness = (playerPool[i]->fitness - leastFitness)/fitnessSum;
 	}
 	std::sort(playerPool.begin(), playerPool.end(), compare);
-	std::cout << "Player pool sorted. \n";
+//	std::cout << "Player pool sorted. \n";
 
 	std::vector <Player*> newPool;
 	for (int i=0; i<numIndividuals/4; i++) {
@@ -114,7 +128,7 @@ void Trainer::starTrekNextGeneration() {
 		delete (player);
 	}
 	playerPool = newPool;
-	std::cout << "New pool created. \n";
+//	std::cout << "New pool created. \n";
 
 	for(unsigned int i = 0; i < statsPool.size(); i++)
 		statsPool[i] = PlayerStats();
