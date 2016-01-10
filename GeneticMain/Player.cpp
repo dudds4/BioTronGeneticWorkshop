@@ -2,6 +2,7 @@
 #include "globals.cpp"
 #include <cstdlib>
 #include <ctime>
+#include <fstream>
 
 Player::Player():
 a(7, 6),
@@ -56,11 +57,69 @@ Player* Player::random() {
 	return p;
 }
 
+void Player::generateMatrixFromFile(std::istream &in, Matrix& m) {
+	int rows = m.numRows();
+	int cols = m.numCols();
+	int value;
+	for(int i = 0; i < rows; i++) {
+		for(int j = 0; j< cols; j++) {
+			in >> value;
+			m.set(i, j, value);
+		}
+	}
+}
+
 Player* Player::fromFile(std::string fileName) {
+	std::ifstream fin;
+	fin.open(fileName.c_str());
+	Player* p = new Player();
+	Matrix aIn(7, 6);
+	Matrix bIn(7, 6);
+	Matrix cIn(7, 6);
+	Matrix dIn(7, 7);
+	Matrix eIn(1, 7);
+	Matrix fIn(7, 1);
+
+	generateMatrixFromFile(fin, aIn);
+	generateMatrixFromFile(fin, bIn);
+	generateMatrixFromFile(fin, cIn);
+	generateMatrixFromFile(fin, dIn);
+	generateMatrixFromFile(fin, eIn);
+	generateMatrixFromFile(fin, fIn);
+
+	p->a = aIn;
+	p->b = bIn;
+	p->c = cIn;
+	p->d = dIn;
+	p->e = eIn;
+	p->f = fIn;
+
 	return new Player();
 }
-void Player::toFile(std::string fileName) {
 
+void Player::outputMatrixToFile(std::ostream &out, Matrix m) {
+	int rows = m.numRows();
+	int cols = m.numCols();
+
+	for(int i = 0; i < rows; i++) {
+		for(int j = 0; j < cols; j++) {
+			out << m.get(i, j) << " ";
+		}
+		out << std::endl;
+	}
+	out << std::endl;
+}
+
+void Player::toFile(std::string fileName) {
+	std::ofstream fout;
+	fout.open(fileName.c_str());
+
+	outputMatrixToFile(fout, this->a);
+	outputMatrixToFile(fout, this->b);
+	outputMatrixToFile(fout, this->c);
+	outputMatrixToFile(fout, this->d);
+	outputMatrixToFile(fout, this->e);
+	outputMatrixToFile(fout, this->f);
 }
 
 int Player::makeMove(int board[][7], int player) {

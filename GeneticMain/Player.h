@@ -17,8 +17,10 @@ public:
 	Player* mate(Player*);
 	
 	static Player* random();
+	static void generateMatrixFromFile(std::istream &in, Matrix& m); 
 	static Player* fromFile(std::string);
-	
+	static void outputMatrixToFile(std::ostream &out, Matrix m);
+
 	void toFile(std::string);
 	
 	int makeMove(int[][7], int);
@@ -33,6 +35,7 @@ public:
 	Matrix d;
 	Matrix e;
 	Matrix f;
+
 };
 
 #endif
