@@ -26,12 +26,12 @@ class Player : public AbstractPlayer {
 		void execute(int in[], int, int out[], int);
 		Neuron *neurons;
 	};
-	Brain brain1, brain2, brain3;
 public:
 	Player();
 	Player(bool init);
 
 	double fitness;
+	Brain brain1, brain2, brain3;
 	
 	Player* mutate();
 	Player* copy();

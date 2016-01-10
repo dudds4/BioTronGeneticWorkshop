@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <fstream>
 #include <cmath>
 
 Player::Neuron::Neuron() {
@@ -94,9 +95,9 @@ Player::Player() {
 
 Player::Player(bool init) {
 	if (init) {
-		brain1.init(42,20,30);
-		brain2.init(42,20,30);
-		brain3.init(20,7,40);
+		brain1.init(42,20,50);
+		brain2.init(42,20,50);
+		brain3.init(20,7,20);
 	}
 }
 
@@ -151,13 +152,6 @@ Player* Player::random() {
 	return new Player(true);
 }
 
-Player* Player::fromFile(std::string) {
-	return new Player();
-}
-void Player::toFile(std::string) {
-
-}
-
 int Player::makeMove(int board[][7], int player) {
 	int columns[7];
 	int midSize = 20;
@@ -201,4 +195,98 @@ int Player::makeMove(int board[][7], int player) {
 		}
 	}
 	return column;
+}
+
+Player* Player::fromFile(std::string fileName) {
+	Player* newPlayer = new Player(true);
+	std::ifstream file;
+	file.open(fileName);
+	int input_size, b1, b2, mid_size, b3, output_size;
+	file >> input_size;
+	file >> b1;
+	file >> b1;
+	file >> mid_size;
+	file >> b3;
+	file >> output_size;
+	if (input_size != 42 || output_size != 7) {
+		file.close();
+		delete newPlayer;
+		return Player::random();
+	}
+
+	int input_weight, output_weight;
+	for (int i=0; i<newPlayer->brain1.size; i++) {
+		for (int j=0; j<input_size; j++) {
+			file >> input_weight;
+			newPlayer->brain1.neurons[i].inputWeights[j] = input_weight;
+		}
+		for (int j=0; j<mid_size; j++) {
+			file >> output_weight;
+			newPlayer->brain1.neurons[i].outputWeights[j] = output_weight;
+		}
+	}
+
+	for (int i=0; i<newPlayer->brain2.size; i++) {
+		for (int j=0; j<input_size; j++) {
+			file >> input_weight;
+			newPlayer->brain2.neurons[i].inputWeights[j] = input_weight;
+		}
+		for (int j=0; j<mid_size; j++) {
+			file >> output_weight;
+			newPlayer->brain2.neurons[i].outputWeights[j] = output_weight;
+		}
+	}
+
+	for (int i=0; i<newPlayer->brain3.size; i++) {
+		for (int j=0; j<mid_size; j++) {
+			file >> input_weight;
+			newPlayer->brain3.neurons[i].inputWeights[j] = input_weight;
+		}
+		for (int j=0; j<output_size; j++) {
+			file >> output_weight;
+			newPlayer->brain3.neurons[i].outputWeights[j] = output_weight;
+		}
+	}
+	file.close();
+	return newPlayer;
+}
+
+void Player::toFile(std::string fileName) {
+	std::ofstream file;
+	file.open(fileName);
+	int midSize = 20;
+	file << 42 << std::endl;
+	file << brain1.size << std::endl;
+	file << brain2.size << std::endl;
+	file << midSize << std::endl;
+	file << brain3.size << std::endl;
+	file << 7 << std::endl;
+
+	for (int i=0; i<brain1.size; i++) {
+		for (int j=0; j<42; j++) {
+			file << brain1.neurons[i].inputWeights[j] << std::endl;
+		}
+		for (int j=0; j<midSize; j++) {
+			file << brain1.neurons[i].outputWeights[j] << std::endl;
+		}
+	}
+
+	for (int i=0; i<brain2.size; i++) {
+		for (int j=0; j<42; j++) {
+			file << brain2.neurons[i].inputWeights[j] << std::endl;
+		}
+		for (int j=0; j<midSize; j++) {
+			file << brain2.neurons[i].outputWeights[j] << std::endl;
+		}
+	}
+
+	for (int i=0; i<brain3.size; i++) {
+		for (int j=0; j<midSize; j++) {
+			file << brain3.neurons[i].inputWeights[j] << std::endl;
+		}
+		for (int j=0; j<7; j++) {
+			file << brain3.neurons[i].outputWeights[j] << std::endl;
+		}
+	}
+	file.close();
 }
