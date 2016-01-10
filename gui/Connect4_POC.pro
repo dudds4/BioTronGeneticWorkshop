@@ -7,8 +7,8 @@ SOURCES += main.cpp \
     BoardController.cpp \
     ../GeneticMain/AbstractPlayer.cpp \
     ../GeneticMain/Match.cpp \
-    Player1/Player1.cpp \
-    Player2/Player2.cpp
+    Player1.cpp \
+    Player2.cpp
 
 
 RESOURCES += qml.qrc
@@ -20,6 +20,6 @@ HEADERS += \
     BoardController.h \
     ../GeneticMain/AbstractPlayer.h \
     ../GeneticMain/Match.h \
-    Player1/Player1.h \
-    Player2/Player2.h
+    Player1.h \
+    Player2.h
 

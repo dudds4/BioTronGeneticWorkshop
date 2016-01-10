@@ -9,8 +9,8 @@
 #include "../GeneticMain/AbstractPlayer.h"
 #include "../GeneticMain/Match.h"
 
-#include "Player1/Player1.h"
-#include "Player2/Player2.h"
+#include "Player1.h"
+#include "Player2.h"
 
 class BoardController : public QObject
 {
