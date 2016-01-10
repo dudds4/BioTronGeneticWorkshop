@@ -33,6 +33,6 @@ void Player::toFile(std::string) {
 
 }
 
-int Player::makeMove(int board[][7], int player) {
-	return rand()%7;
+int Player::makeMove(int board[][3], int player) {
+	return rand()%9;
 }

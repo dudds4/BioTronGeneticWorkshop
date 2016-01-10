@@ -4,7 +4,7 @@
 
 DefaultPlayer::DefaultPlayer() {}
 
-int DefaultPlayer::makeMove(int input[][7], int length) {
+int DefaultPlayer::makeMove(int input[][3], int length) {
     if(length > CELLS)    return -1;
 
     int columnToPlayOn = -1;

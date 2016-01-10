@@ -32,8 +32,8 @@ private:
     int m_test;
 
     void printBoard();
-    int checkWinConditions(int);
-    bool applyMove(int column, int playerId);
+    int checkWinConditions(int, int);
+    bool applyMove(int row, int column, int playerId);
     bool checkForVerticalWin(int,int);
     bool checkForHorizontalWin(int,int);
     bool checkForDiagonalWin(int,int);

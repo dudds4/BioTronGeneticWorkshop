@@ -62,17 +62,16 @@ void Match::setPlayer2(AbstractPlayer* p) {
     player2->setId(2);
 }
 
-bool Match::applyMove(int column, int playerId) {
-    for (int i = ROWS - 1; i >= 0; i--) {
-        if (matchData[i][column] == 0) {
-            checkLegal("applyMove", i, column);
-            matchData[i][column] = playerId;
-            break;
-        } else if (i == 0) {
-            return false;
-        }
+bool Match::applyMove(int row, int col, int playerId) {
+    if (row < 0 || row >= ROWS || col < 0 || col >= COLUMNS) {
+        return false;
     }
-    return true;
+
+    if (matchData[row][col] == 0) {
+        matchData[row][col] = playerId;
+        return true;
+    }
+    return false;
 }
 
 bool Match::playNextMove() {
@@ -80,17 +79,20 @@ bool Match::playNextMove() {
         return true;
     }
 
-    int column;
+    int position, row, column;
     AbstractPlayer* p = moveNum%2 ? player1 : player2;
 
     moveNum++;
-    if(moveNum > 42)
+    if(moveNum > 8)
         std::cout << "MoveNum: " << moveNum << std::endl;
  //   std::cout << "About to invoke Player \n";
-    column = p->makeMove(matchData, (moveNum%2)+1);
+    position = p->makeMove(matchData, (moveNum%2)+1);
  //   std::cout << "Player chose column: " << column << "\n";
     
-    if (!applyMove(column, (moveNum%2)+1)) {
+    row = position/3;
+    column = position%3;
+
+    if (!applyMove(row, column, (moveNum%2)+1)) {
         illegalMoves[moveNum%2]++;
         if (illegalMoves[moveNum%2] > ILLEGAL_MOVE_THRESHOLD) {
             winningPlayer = moveNum%2 ? player2 : player1;
@@ -98,11 +100,12 @@ bool Match::playNextMove() {
             return true;
         }
         do {
+            row = rand()%ROWS;
             column = rand()%COLUMNS;
-        } while (!applyMove(column, (moveNum%2)+1));
+        } while (!applyMove(row, column, (moveNum%2)+1));
     }
 
-    int winCond = checkWinConditions(column);
+    int winCond = checkWinConditions(row, column);
     if (winCond == 1) {
         winningPlayer = p;
         m_gameOver = true;
@@ -158,14 +161,8 @@ int Match::playOutVerbose() {
     }
 }
 
-int Match::checkWinConditions(int column) {
-    int row = 0;
-    while(row < ROWS) {
-        if (matchData[row][column] != 0) break;
-        row++;
-    } 
-
-    if (row == ROWS) {
+int Match::checkWinConditions(int row, int column) {
+    if (matchData[row][column] == 0) {
         std::cout << "checkWinConditions:: Returning error\n";
         return ERROR;
     }
@@ -206,7 +203,7 @@ bool Match::checkForVerticalWin(int row, int column) {
     while((++r) < ROWS && matchData[r][column] == playerNum)
         consecutive+=1;
 
-    return consecutive > 3;
+    return consecutive > 2;
 }
 
 bool Match::checkForHorizontalWin(int row, int column) {
@@ -225,7 +222,7 @@ bool Match::checkForHorizontalWin(int row, int column) {
     while((++c) < COLUMNS && matchData[row][c] == playerNum)
         consecutive++;
 
-    return consecutive > 3;
+    return consecutive > 2;
 }
 
 bool Match::checkForDiagonalWin(int row, int column) {
@@ -251,7 +248,7 @@ bool Match::checkForDiagonalWin(int row, int column) {
             matchData[r][c] == playerNum) 
         consecutive++;
 
-    if(consecutive > 3) return true;
+    if(consecutive > 2) return true;
     
     consecutive = 1;
     r = row;
@@ -269,7 +266,7 @@ bool Match::checkForDiagonalWin(int row, int column) {
             matchData[r][c] == playerNum) 
         consecutive++;
 
-    return consecutive > 3;
+    return consecutive > 2;
 }
 
 AbstractPlayer* Match::getWinningPlayer() {
