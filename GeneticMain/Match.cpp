@@ -1,5 +1,4 @@
 #include "Match.h"
-#include "globals.cpp"
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
@@ -26,8 +25,9 @@ Match::Match() {
     winningPlayer = NULL;
     m_test = 0;
 
-    for(int i = 0; i < ROWS * COLUMNS; i++)
-        ((int*)matchData)[i] = 0;
+    for(int i = 0; i < ROWS; i++)
+        for(int j=0; j < COLUMNS; j++)
+            matchData[i][j] = 0;
     
     srand(time(0));
 }
@@ -44,8 +44,9 @@ Match::Match(AbstractPlayer* p1, AbstractPlayer* p2) {
     winningPlayer = NULL;
     m_test = 0;
 
-    for(int i = 0; i < ROWS * COLUMNS; i++)
-        ((int*)matchData)[i] = 0;
+    for(int i = 0; i < ROWS; i++)
+        for(int j=0; j < COLUMNS; j++)
+            matchData[i][j] = 0;
 
     srand(time(0));
 }
@@ -130,7 +131,7 @@ int Match::playOut() {
     do {
         gameOver = playNextMove();
         //printBoard();
-    } while(!gameOver && moveNum < ROWS*COLUMNS);
+    } while(!gameOver && moveNum < ROWS*COLUMNS-1);
 
     if(m_test != 0)
         std::cout << m_test << std::endl;
@@ -147,7 +148,7 @@ int Match::playOutVerbose() {
     do {
         gameOver = playNextMove();
         printBoard();
-    } while(!gameOver && moveNum < ROWS*COLUMNS);
+    } while(!gameOver && moveNum < ROWS*COLUMNS-1);
 
     m_gameOver = true;
     if (!gameOver) {

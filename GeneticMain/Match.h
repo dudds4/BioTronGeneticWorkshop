@@ -2,13 +2,11 @@
 #define MATCH_H
 
 #include "AbstractPlayer.h"
+#include "globals.cpp"
 
 class Match
 {
 public:
-    static const int ROWS = 6;
-    static const int COLUMNS = 7;
-	
     Match();
     Match(AbstractPlayer*, AbstractPlayer*);
     ~Match();

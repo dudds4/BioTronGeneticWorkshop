@@ -78,6 +78,7 @@ void Trainer::starTrekNextGeneration() {
 	
 	for (int i=0; i<numIndividuals; i++) {
 		playerPool[i]->fitness = statsPool[i].getFitness();
+//		std::cout << "playerPool[" << i << "] fitness: " << playerPool[i]->fitness << std::endl;
 		fitnessSum += playerPool[i]->fitness;
 		if (playerPool[i]->fitness < leastFitness || i == 0) {
 			leastFitness = playerPool[i]->fitness;
@@ -142,7 +143,7 @@ float Trainer::PlayerStats::getFitness() {
 	if(games == 0) std::cout << "Finna divide bai zero faaaaaaaack (games)\n";
 	if(numMoves == 0) std::cout << "Finna divide bai zero faaaaaaaack (numMoves)\n";
 
-	return WIN_WEIGHT*wins/games + DRAW_WEIGHT*draws/games - ILLEGAL_WEIGHT*illegalMoves/numMoves;
+	return WIN_WEIGHT*((float)wins)/games + DRAW_WEIGHT*((float)draws)/games - ILLEGAL_WEIGHT*((float)illegalMoves)/numMoves;
 }
 
 void Trainer::PlayerStats::addMatchStats(Match* match, Player* player) {
