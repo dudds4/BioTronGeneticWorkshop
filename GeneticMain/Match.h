@@ -2,19 +2,18 @@
 #define MATCH_H
 
 #include "AbstractPlayer.h"
+#include "globals.cpp"
 
 class Match
 {
 public:
-    static const int ROWS = 6;
-    static const int COLUMNS = 7;
-	
     Match();
     Match(AbstractPlayer*, AbstractPlayer*);
     ~Match();
     void setPlayer1(AbstractPlayer*);
     void setPlayer2(AbstractPlayer*);
     int playOut();
+    int playOutVerbose();
     bool playNextMove();
 	bool copyBoardOut(int[][COLUMNS], int);
 	
@@ -24,12 +23,13 @@ public:
 
 private:
     int moveNum;
-    bool m_gameOver = false;
+    bool m_gameOver;
     AbstractPlayer* winningPlayer;
     int illegalMoves[2];
     AbstractPlayer* player1;
     AbstractPlayer* player2;
     int matchData[ROWS][COLUMNS];
+    int m_test;
 
     void printBoard();
     int checkWinConditions(int);

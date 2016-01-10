@@ -1,24 +1,40 @@
 #include "Match.h"
-#include "globals.cpp"
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
 
+void debugRowIndex(std::string tag, int index) {
+    if(index < 0 || index >= ROWS)
+        std::cout << tag <<  ". Invalid row index: " << index << std::endl;
+}
+void debugColIndex(std::string tag, int index) {
+    if(index < 0 || index >= COLUMNS)
+        std::cout << tag <<  ". Invalid row index: " << index << std::endl;
+}
+void checkLegal(std::string tag, int row, int col) {
+    debugRowIndex(tag, row);
+    debugColIndex(tag, col);
+}
+
+
 Match::Match() {
-    srand(time(0));
     moveNum = -1;
+    m_gameOver = false;
     illegalMoves[0] = 0;
     illegalMoves[1] = 0;
     winningPlayer = NULL;
-    m_gameOver = false;
+    m_test = 0;
 
-    for(int i = 0; i < ROWS * COLUMNS; i++)
-        ((int*)matchData)[i] = 0;
+    for(int i = 0; i < ROWS; i++)
+        for(int j=0; j < COLUMNS; j++)
+            matchData[i][j] = 0;
+    
+    srand(time(0));
 }
 
 Match::Match(AbstractPlayer* p1, AbstractPlayer* p2) {
-    srand(time(0));
     moveNum = -1;
+    m_gameOver = false;
     player1 = p1;
     player2 = p2;
     player1->setId(1);
@@ -26,10 +42,13 @@ Match::Match(AbstractPlayer* p1, AbstractPlayer* p2) {
     illegalMoves[0] = 0;
     illegalMoves[1] = 0;
     winningPlayer = NULL;
-    m_gameOver = false;
+    m_test = 0;
 
-    for(int i = 0; i < ROWS * COLUMNS; i++)
-        ((int*)matchData)[i] = 0;
+    for(int i = 0; i < ROWS; i++)
+        for(int j=0; j < COLUMNS; j++)
+            matchData[i][j] = 0;
+
+    srand(time(0));
 }
 
 Match::~Match() {}
@@ -46,6 +65,7 @@ void Match::setPlayer2(AbstractPlayer* p) {
 bool Match::applyMove(int column, int playerId) {
     for (int i = ROWS - 1; i >= 0; i--) {
         if (matchData[i][column] == 0) {
+            checkLegal("applyMove", i, column);
             matchData[i][column] = playerId;
             break;
         } else if (i == 0) {
@@ -64,7 +84,11 @@ bool Match::playNextMove() {
     AbstractPlayer* p = moveNum%2 ? player1 : player2;
 
     moveNum++;
+    if(moveNum > 42)
+        std::cout << "MoveNum: " << moveNum << std::endl;
+ //   std::cout << "About to invoke Player \n";
     column = p->makeMove(matchData, (moveNum%2)+1);
+ //   std::cout << "Player chose column: " << column << "\n";
     
     if (!applyMove(column, (moveNum%2)+1)) {
         illegalMoves[moveNum%2]++;
@@ -107,14 +131,31 @@ int Match::playOut() {
     do {
         gameOver = playNextMove();
         //printBoard();
-    } while(!gameOver && moveNum < ROWS*COLUMNS);
+    } while(!gameOver && moveNum < ROWS*COLUMNS-1);
+
+    if(m_test != 0)
+        std::cout << m_test << std::endl;
 
     if (!gameOver) {
         return DRAW;
     } else {
         return (winningPlayer == player1) ? 1 : 2;
     }
+}
+
+int Match::playOutVerbose() { 
+    bool gameOver = false;
+    do {
+        gameOver = playNextMove();
+        printBoard();
+    } while(!gameOver && moveNum < ROWS*COLUMNS-1);
+
     m_gameOver = true;
+    if (!gameOver) {
+        return DRAW;
+    } else {
+        return (winningPlayer == player1) ? 1 : 2;
+    }
 }
 
 int Match::checkWinConditions(int column) {
