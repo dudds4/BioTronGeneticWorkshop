@@ -7,8 +7,10 @@
 #include <QTimer>
 
 #include "../GeneticMain/AbstractPlayer.h"
-#include "../GeneticMain/Player.h"
 #include "../GeneticMain/Match.h"
+
+#include "Player1/Player1.h"
+#include "Player2/Player2.h"
 
 class BoardController : public QObject
 {
@@ -36,8 +38,8 @@ private:
      int getPlayerFromTurnNumber();
 
      Match internalMatch;
-     Player* p1;
-     Player* p2;
+     Player1* p1;
+     Player2* p2;
      QTimer* timer;
 };
 
