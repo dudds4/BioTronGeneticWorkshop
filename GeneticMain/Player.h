@@ -5,6 +5,9 @@
 
 class Player : public AbstractPlayer {
 	int skill;
+	/*
+	Place Data Structure Here
+	*/
 public:
 	Player();
 
