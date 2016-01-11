@@ -29,6 +29,10 @@ private:
       Matrix c;
       Matrix d;
       Matrix e;
+      Matrix f;
+      Matrix g;
+
+
 
 };
 

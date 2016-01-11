@@ -5,11 +5,13 @@
 #include <iostream>
 
 Player::Player():
-a(9, 9),
-b(9, 9),
-c(9, 9),
-d(1, 9),
-e(9, 9) {
+a(9, 18),
+b(9, 18),
+c(9, 18),
+d(18, 9),
+e(18, 9),
+f(18, 9),
+g(1, 9) {
 	time_t timer;
 	srand(time(&timer));
 }
@@ -22,27 +24,38 @@ Player* Player::copy() {
 
 Player* Player::mutate() {
 	Player* p = new Player();
-	p->a = this->a.add(randomMatrix(9, 9)).scale(0.5);
-	p->b = this->b.add(randomMatrix(9, 9)).scale(0.5);
-	p->c = this->c.add(randomMatrix(9, 9)).scale(0.5);
-	p->d = this->d.add(randomMatrix(1, 9)).scale(0.5);	
+	p->a = this->a.add(randomMatrix(9, 18)).scale(0.5);
+	p->b = this->b.add(randomMatrix(9, 18)).scale(0.5);
+	p->c = this->c.add(randomMatrix(9, 18)).scale(0.5);
+	p->d = this->d.add(randomMatrix(18, 9)).scale(0.5);	
+	p->e = this->e.add(randomMatrix(18, 9)).scale(0.5);
+	p->f = this->f.add(randomMatrix(18, 9)).scale(0.5);	
+	p->g = this->g.add(randomMatrix(1, 9)).scale(0.5);
 	return p;
 }
 
 Player* Player::mate(Player* other) {
 	Player* p = new Player();
-	p->a = this->a.add(other.a).scale(0.5);
-	p->b = this->b.add(other.b).scale(0.5);
-	p->c = this->c.add(other.c).scale(0.5);
-	p->d = this->d.add(other.d).scale(0.5);
+	p->a = this->a.add(other->a).scale(0.5);
+	p->b = this->b.add(other->b).scale(0.5);
+	p->c = this->c.add(other->c).scale(0.5);
+	p->d = this->d.add(other->d).scale(0.5);
+	p->e = this->e.add(other->e).scale(0.5);
+	p->f = this->f.add(other->f).scale(0.5);
+	p->g = this->g.add(other->g).scale(0.5);
+	
 	return p;
 }
 Player* Player::random() {
         Player* p = new Player();
-        p->a = randomMatrix(9, 9);
-	p->b = randomMatrix(9, 9);
-	p->c = randomMatrix(9, 9);
-	p->d = randomMatrix(1, 9);
+        p->a = randomMatrix(9, 18);
+	p->b = randomMatrix(9, 18);
+	p->c = randomMatrix(9, 18);
+	p->d = randomMatrix(18, 9);
+	p->e = randomMatrix(18, 9);
+	p->f = randomMatrix(18, 9);
+	p->g = randomMatrix(1, 9);
+
 	return p;
 }
 
@@ -65,9 +78,14 @@ int Player::makeMove(int board[][3], int player) {
 	Matrix i1 = mySpaces.rightMultiply(a);
 	Matrix i2 = enemySpaces.rightMultiply(b);
 	Matrix i3 = nonEmpty.rightMultiply(c);
-	Matrix s = i1.add(i2).add(i3).add(d);
+
+	Matrix s1 = i1.add(i2).rightMultiply(d);
+	Matrix s2 = i1.add(i3).rightMultiply(e);
+	Matrix s3 = i2.add(i3).rightMultiply(f);
+
+	Matrix s = s1.add(s2).add(s3).add(g);
 	
-	int maxInd = 0; max = s.get(0, 0);
+	int maxInd = 0, max = s.get(0, 0);
 	for(int i = 1; i < 9; i++) {
 		if(s.get(0, i) > max) {
 			max = s.get(0, i);
