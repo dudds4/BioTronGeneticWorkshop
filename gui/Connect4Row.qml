@@ -7,7 +7,7 @@ Row {
 
     /* Some sweet spacing/positioning math */
     width: parent.width
-    property int itemsPerRow: 7
+    property int itemsPerRow: 3
     property int sspacing: 4
     spacing: sspacing
 
@@ -29,7 +29,6 @@ Row {
             property int r: (parent.width - sspacing * (itemsPerRow - 1)) / (itemsPerRow * 2)
             height: r * 2
             width: r * 2
-            radius: r
         }
     }
 }

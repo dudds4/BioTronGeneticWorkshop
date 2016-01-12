@@ -14,6 +14,7 @@ f(18, 9),
 g(1, 9) {
 	time_t timer;
 	srand(time(&timer));
+//  Instantiates a new Player
 }
 
 Player* Player::copy() {
@@ -22,6 +23,8 @@ Player* Player::copy() {
 	return newPlayer;
 }
 
+//  Returns a copy of current player
+//  with minor random differences.
 Player* Player::mutate() {
 	Player* p = new Player();
 	p->a = this->a.add(randomMatrix(9, 18)).scale(0.5);
@@ -34,6 +37,9 @@ Player* Player::mutate() {
 	return p;
 }
 
+//  Returns a new player whose data
+//	structure mixes the data from p2 and
+//  the current player
 Player* Player::mate(Player* other) {
 	Player* p = new Player();
 	p->a = this->a.add(other->a).scale(0.5);
@@ -46,6 +52,8 @@ Player* Player::mate(Player* other) {
 	
 	return p;
 }
+
+//	Returns a player with entirely randomized data
 Player* Player::random() {
         Player* p = new Player();
         p->a = randomMatrix(9, 18);
@@ -84,7 +92,7 @@ void Player::generateMatrixFromFile(std::istream &in, Matrix& m) {
     }
 }
 
-
+//  Returns a player whose data structure is outlined in a file
 Player* Player::fromFile(std::string fileName) {
 	ifstream fin;
 	fin.open(fileName.c_str());
@@ -100,6 +108,7 @@ Player* Player::fromFile(std::string fileName) {
 	
 	return p;
 }
+//  Stores the player's data into a file
 void Player::toFile(std::string fileName) {
 	ofstream fout;
 	fout.open(fileName.c_str());
@@ -113,6 +122,8 @@ void Player::toFile(std::string fileName) {
 	outputMatrixToFile(this->g);	
 }
 
+//  Given a board and the current player's ID,
+//  returns a position where the Player would like to play.
 int Player::makeMove(int board[][3], int player) {
         Matrix mySpaces(1, 9);
         Matrix enemySpaces(1, 9);

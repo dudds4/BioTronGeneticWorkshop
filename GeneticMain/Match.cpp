@@ -110,11 +110,12 @@ bool Match::playNextMove() {
         winningPlayer = p;
         m_gameOver = true;
         return true;
-    } else if (winCond == ERROR) {
+    } else if (winCond == ERROR || moveNum == 8) {
         winningPlayer = NULL;
         m_gameOver = true;
         return true;
     }
+
     return false;
 }
 
