@@ -31,7 +31,7 @@ signals:
     void boardChanged();
 
 private:
-     int board[6][7];
+     int board[3][3];
      unsigned int turnNumber;
      int getPlayerFromTurnNumber();
 
