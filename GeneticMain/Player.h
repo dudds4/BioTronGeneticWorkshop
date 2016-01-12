@@ -3,6 +3,7 @@
 
 #include "AbstractPlayer.h"
 #include "Matrix.h"
+#include <fstream>
 
 class Player : public AbstractPlayer {
 	int skill;
@@ -23,7 +24,8 @@ public:
       //----------------------------//
 private:
       static Matrix randomMatrix(int, int);
-
+	  void outputMatrixToFile(std::ostream &out, Matrix m); 
+	  static void generateMatrixFromFile(std::istream &in, Matrix& m);
       Matrix a;
       Matrix b;
       Matrix c;
@@ -31,8 +33,6 @@ private:
       Matrix e;
       Matrix f;
       Matrix g;
-
-
 
 };
 

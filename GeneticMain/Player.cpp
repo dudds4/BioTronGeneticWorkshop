@@ -59,11 +59,58 @@ Player* Player::random() {
 	return p;
 }
 
-Player* Player::fromFile(std::string) {
-	return new Player();
-}
-void Player::toFile(std::string) {
+void Player::outputMatrixToFile(std::ostream &out, Matrix m) {
+    int rows = m.numRows();
+    int cols = m.numCols();
 
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < cols; j++) {
+            out << m.get(i, j) << " ";
+        }
+        out << std::endl;
+    }
+    out << std::endl;
+}
+
+void Player::generateMatrixFromFile(std::istream &in, Matrix& m) {
+    int rows = m.numRows();
+    int cols = m.numCols();
+    int value;
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j< cols; j++) {
+            in >> value;
+            m.set(i, j, value);
+        }
+    }
+}
+
+
+Player* Player::fromFile(std::string fileName) {
+	ifstream fin;
+	fin.open(fileName.c_str());
+	
+	Player* p = new Player();
+	generateMatrixFromFile(fin, p->a);
+	generateMatrixFromFile(fin, p->b);
+	generateMatrixFromFile(fin, p->c);
+	generateMatrixFromFile(fin, p->d);
+	generateMatrixFromFile(fin, p->e);
+	generateMatrixFromFile(fin, p->f);
+	generateMatrixFromFile(fin, p->g);	
+	
+	return p;
+}
+void Player::toFile(std::string fileName) {
+	ofstream fout;
+	fout.open(fileName.c_str());
+	
+	outputMatrixToFile(this->a);
+	outputMatrixToFile(this->b);
+	outputMatrixToFile(this->c);
+	outputMatrixToFile(this->d);
+	outputMatrixToFile(this->e);
+	outputMatrixToFile(this->f);
+	outputMatrixToFile(this->g);	
 }
 
 int Player::makeMove(int board[][3], int player) {
