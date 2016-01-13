@@ -94,7 +94,7 @@ void Player::generateMatrixFromFile(std::istream &in, Matrix& m) {
 
 //  Returns a player whose data structure is outlined in a file
 Player* Player::fromFile(std::string fileName) {
-	ifstream fin;
+	std::ifstream fin;
 	fin.open(fileName.c_str());
 	
 	Player* p = new Player();
@@ -110,16 +110,16 @@ Player* Player::fromFile(std::string fileName) {
 }
 //  Stores the player's data into a file
 void Player::toFile(std::string fileName) {
-	ofstream fout;
+	std::ofstream fout;
 	fout.open(fileName.c_str());
 	
-	outputMatrixToFile(this->a);
-	outputMatrixToFile(this->b);
-	outputMatrixToFile(this->c);
-	outputMatrixToFile(this->d);
-	outputMatrixToFile(this->e);
-	outputMatrixToFile(this->f);
-	outputMatrixToFile(this->g);	
+	outputMatrixToFile(fout, this->a);
+	outputMatrixToFile(fout, this->b);
+	outputMatrixToFile(fout, this->c);
+	outputMatrixToFile(fout, this->d);
+	outputMatrixToFile(fout, this->e);
+	outputMatrixToFile(fout, this->f);
+	outputMatrixToFile(fout, this->g);	
 }
 
 //  Given a board and the current player's ID,
