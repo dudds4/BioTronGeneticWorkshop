@@ -132,6 +132,9 @@ int Player::makeMove(int board[][3], int player) {
 	for(int i = 0; i < 9; i++) {
 		row = i / 3;
 		col = i % 3;
+		mySpaces.set(row, col, (board[row][col] == player);
+		enemySpaces.set(row, col, (board[row][col] && board[row][col] != player));
+		nonEmpty.set(row, col, (board[row][col] != 0));
         }
 	Matrix i1 = mySpaces.rightMultiply(a);
 	Matrix i2 = enemySpaces.rightMultiply(b);
