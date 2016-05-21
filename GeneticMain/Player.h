@@ -3,35 +3,31 @@
 
 #include "AbstractPlayer.h"
 
-#define neuronCount 200
-
 class Player : public AbstractPlayer {
-	int skill;
 	class Neuron {
 	public:
 		Neuron();
 		Neuron(int, int);
 		void mutate();
 		int value;
-		int in, out;
+		int numInputs, numOutputs;
 		int* outputWeights;
 		int* inputWeights;
 	};
 	class Brain {
 	public:
 		Brain();
-		Brain(int _size);
 		int in, out, size;
 		void init(int, int, int);
 		void execute(int in[], int, int out[], int);
 		Neuron *neurons;
 	};
+	Brain brain1, brain2, brain3;
 public:
+	double fitness;
 	Player();
 	Player(bool init);
-
-	double fitness;
-	Brain brain1, brain2, brain3;
+	Player(std::string);
 	
 	Player* mutate();
 	Player* copy();
