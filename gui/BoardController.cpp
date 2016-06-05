@@ -29,7 +29,7 @@ BoardController::~BoardController() {
 QVariantList BoardController::gameBoard() {
    //qDebug() << "gettingBoard for qml";
     QList<QVariant> result;
-    internalMatch.copyBoardOut(board, 6);
+    internalMatch.copyBoardOut(board, 3);
 
     for(int i = 0; i < 6; i++) {
         for(int j = 0; j < 7; j++)

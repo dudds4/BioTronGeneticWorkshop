@@ -14,7 +14,7 @@ public:
     DefaultPlayer* fromFile(std::string);
     void toFile(std::string);
 
-    int makeMove(int[][7], int);
+    int makeMove(int[][3], int);
 };
 
 #endif // DEFAULTPLAYER_H
