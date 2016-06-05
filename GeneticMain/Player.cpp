@@ -91,9 +91,9 @@ Player::Player(bool init) {
 	time_t timer;
 	srand(time(&timer));
 	if (init) {
-		brain1.init(9,15,100);
-		brain2.init(9,15,100);
-		brain3.init(15,9,80);
+		brain1.init(9,15,50);
+		brain2.init(9,15,50);
+		brain3.init(15,9,40);
 	}
 }
 
@@ -103,10 +103,6 @@ Player::Player(std::string fileName) {
 
 	std::ifstream file;
 	file.open(fileName);
-
-	brain1.init(9,15,100);
-	brain2.init(9,15,100);
-	brain3.init(15,9,80);
 	
 	int input_size, b1, b2, mid_size, b3, output_size;
 	file >> input_size;
@@ -119,6 +115,10 @@ Player::Player(std::string fileName) {
 		file.close();
 		return;
 	}
+
+	brain1.init(input_size, mid_size, b1);
+	brain2.init(input_size, mid_size, b2);
+	brain3.init(mid_size, output_size, b3);
 
 	int input_weight, output_weight;
 	for (int i=0; i<brain1.size; i++) {

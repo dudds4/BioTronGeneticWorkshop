@@ -113,7 +113,7 @@ void Trainer::starTrekNextGeneration() {
 		newPool.push_back(playerPool[i]->mate(playerPool[i+2]));
 	}
 	for (int i=0; i<numIndividuals/8; i++) {
-		newPool.push_back(Player::random());
+		newPool.push_back(playerPool[0]->mutate());
 	}
 
 	int idx = 0;
