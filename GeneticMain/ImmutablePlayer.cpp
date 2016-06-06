@@ -16,7 +16,7 @@ ImmutablePlayer::ImmutablePlayer(int _skill) {
 	skill = _skill;
 }
 
-int ImmutablePlayer::makeMove(int board[][7], int player, double[] output) {
+void ImmutablePlayer::makeMove(int board[][7], int player, double output[]) {
     int chosen;
 
     switch (skill) {

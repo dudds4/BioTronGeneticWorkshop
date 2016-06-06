@@ -10,7 +10,7 @@ class AbstractPlayer {
 			virtual ~AbstractPlayer(){}
 			void setId(int);
 			int getId();
-			virtual int makeMove(int[][3], int, double[]) = 0;
+			virtual void makeMove(int[][3], int, double[]) = 0;
 };
 
 #endif

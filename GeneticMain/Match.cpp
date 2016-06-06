@@ -79,14 +79,20 @@ bool Match::playNextMove() {
         return true;
     }
 
-    int position, row, column;
+    int row, column;
     AbstractPlayer* p = moveNum%2 ? player1 : player2;
 
     moveNum++;
     if(moveNum > 8)
         std::cout << "MoveNum: " << moveNum << std::endl;
- //   std::cout << "About to invoke Player \n";
-    position = p->makeMove(matchData, (moveNum%2)+1);
+    
+    double output[9];
+    p->makeMove(matchData, (moveNum%2)+1, output);
+    int position = 0;
+    for(int i = 1; i<9; i++) {
+       if(output[i] > output[position]) 
+          position = i;
+    }
  //   std::cout << "Player chose column: " << column << "\n";
     
     row = position/3;

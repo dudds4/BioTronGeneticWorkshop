@@ -8,7 +8,7 @@ const int CELLS = 9;
 const int DRAW = 0;
 const int ERROR = -1;
 
-const int GENERATIONS = 1000;
+const int GENERATIONS = 500;
 const int POOL_SIZE = 100;
 
 const int GAMES_PER_MATCH = 20;
