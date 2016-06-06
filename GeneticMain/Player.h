@@ -23,20 +23,17 @@ public:
 	static Player* fromFile(std::string);
 	void toFile(std::string);
 	
-	int makeMove(int[][3], int);
+	int makeMove(int[][3], int, double[]);
       //----------------------------//
 private:
       static Matrix randomMatrix(int, int);
 	  void outputMatrixToFile(std::ostream &out, Matrix m); 
 	  static void generateMatrixFromFile(std::istream &in, Matrix& m);
-      Matrix a;
-      Matrix b;
-      Matrix c;
-      Matrix d;
-      Matrix e;
-      Matrix f;
-      Matrix g;
-
+      double sigmoid(double);
+      Matrix applySigmoid(Matrix m);
+      Matrix theta1;
+      Matrix theta2;
+      Matrix theta3;
 };
 
 #endif

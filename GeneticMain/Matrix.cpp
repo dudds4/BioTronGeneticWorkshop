@@ -5,7 +5,7 @@ Matrix::Matrix(int rows, int cols) {
 	m_columns = cols;
 
 	int numIndices = m_rows * m_columns;
-	data = new int[numIndices];
+	data = new float[numIndices];
 	for(int i = 0; i < numIndices; i++) {
 		data[0] = 0;
 	}
@@ -13,7 +13,7 @@ Matrix::Matrix(int rows, int cols) {
 
 Matrix::Matrix(const Matrix &source) {
 	int sizeOfData = source.numRows() * source.numCols();
-	this->data = new int[sizeOfData];
+	this->data = new float[sizeOfData];
 	this->m_rows = source.numRows();
 	this->m_columns = source.numCols();
 
@@ -27,7 +27,7 @@ Matrix& Matrix::operator=(const Matrix &source) {
 	int sizeOfData = source.numRows() * source.numCols();
 	if(sizeOfData != this->numRows() * this->numCols()) {
 		delete[] this->data;
-		this->data = new int[sizeOfData];
+		this->data = new float[sizeOfData];
 	}
 	this->m_rows = source.numRows();
 	this->m_columns = source.numCols();

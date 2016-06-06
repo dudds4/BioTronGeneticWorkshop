@@ -19,7 +19,7 @@ public:
 	
 private:
 	Matrix rMultiply(Matrix) const;
-	int* data;
+	float* data;
 	int m_rows;
 	int m_columns;
 };

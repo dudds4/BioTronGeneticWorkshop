@@ -122,39 +122,41 @@ void Player::toFile(std::string fileName) {
 	outputMatrixToFile(fout, this->g);	
 }
 
+double Player::quickSigmoid(double x) {
+    return ((t / (1.0 + fabs(t))) + 1.0)/2.0;
+}
+
+Matrix Player::applySigmoid(Matrix m) {
+    for(int i = 0; i < m.numRows(); i++)
+        for(int j = 0; j < m.numCols(); j++) {
+            double a = m.get(i, j);
+            m.set(i, j, quickSigmoid(a));
+        }
+}
+
 //  Given a board and the current player's ID,
 //  returns a position where the Player would like to play.
-int Player::makeMove(int board[][3], int player) {
-        Matrix mySpaces(1, 9);
-        Matrix enemySpaces(1, 9);
-        Matrix nonEmpty(1, 9);
+void Player::makeMove(int board[][3], int player, double output[]) {
+
+    //feature extraction
+    Matrix inputVector(1, 18);
 	int row, col;        
 	for(int i = 0; i < 9; i++) {
 		row = i / 3;
 		col = i % 3;
-		mySpaces.set(row, col, (board[row][col] == player);
-		enemySpaces.set(row, col, (board[row][col] && board[row][col] != player));
-		nonEmpty.set(row, col, (board[row][col] != 0));
-        }
-	Matrix i1 = mySpaces.rightMultiply(a);
-	Matrix i2 = enemySpaces.rightMultiply(b);
-	Matrix i3 = nonEmpty.rightMultiply(c);
+	    inputVector.set(0, i, (board[row][col] == player));
+	    inputVector.set(0, i+9, (board[row][col] && board[row][col] != player));
+    }
 
-	Matrix s1 = i1.add(i2).rightMultiply(d);
-	Matrix s2 = i1.add(i3).rightMultiply(e);
-	Matrix s3 = i2.add(i3).rightMultiply(f);
+    //neural net forward propagation
+    Matrix secondLayer = applySigmoid(inputVector.rightMultiply(theta1));
+    Matrix thirdLayer = applySigmoid(secondLayer.rightMultiply(theta2));
+    Matrix finalLayer = applySigmoid(thirdLayer.rightMultiply(theta3));
 
-	Matrix s = s1.add(s2).add(s3).add(g);
-	
-	int maxInd = 0, max = s.get(0, 0);
-	for(int i = 1; i < 9; i++) {
-		if(s.get(0, i) > max) {
-			max = s.get(0, i);
-			maxInd = i;
-		}
-	}
-
-	return maxInd;
+    //copy result into output "vector"
+    for(int i = 0; i < 9; i++)
+        output[i] = finalLayer.get(0, i); 
+    return; 	
 }
 
 Matrix Player::randomMatrix(int width, int height) {
