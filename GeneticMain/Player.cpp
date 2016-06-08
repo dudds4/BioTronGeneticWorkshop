@@ -8,8 +8,7 @@
 
 Player::Player():
 theta1(19, 18),
-theta2(19, 18),
-theta3(19, 9) {
+theta2(19, 9) {
 	time_t timer;
 	srand(time(&timer));
 //  Instantiates a new Player
@@ -26,8 +25,7 @@ Player* Player::copy() {
 Player* Player::mutate() {
 	Player* p = new Player();
 	p->theta1 = this->theta1.add(randomMatrix(19, 18)).scale(0.5);
-	p->theta2 = this->theta2.add(randomMatrix(19, 18)).scale(0.5);
-	p->theta3 = this->theta3.add(randomMatrix(19, 9)).scale(0.5);
+	p->theta2 = this->theta2.add(randomMatrix(19, 9)).scale(0.5);
 	return p;
 }
 
@@ -38,7 +36,6 @@ Player* Player::mate(Player* other) {
 	Player* p = new Player();
 	p->theta1 = this->theta1.add(other->theta1).scale(0.5);
 	p->theta2 = this->theta2.add(other->theta2).scale(0.5);
-	p->theta3 = this->theta3.add(other->theta3).scale(0.5);
 	
 	return p;
 }
@@ -47,8 +44,7 @@ Player* Player::mate(Player* other) {
 Player* Player::random() {
     Player* p = new Player();
     p->theta1 = randomMatrix(19, 18);
-    p->theta2 = randomMatrix(19, 18);
-    p->theta3 = randomMatrix(19, 9);
+    p->theta2 = randomMatrix(19, 9);
 
 	return p;
 }
@@ -86,7 +82,6 @@ Player* Player::fromFile(std::string fileName) {
 	Player* p = new Player();
 	generateMatrixFromFile(fin, p->theta1);
 	generateMatrixFromFile(fin, p->theta2);
-	generateMatrixFromFile(fin, p->theta3);
 	
 	return p;
 }
@@ -97,7 +92,6 @@ void Player::toFile(std::string fileName) {
 	
 	outputMatrixToFile(fout, this->theta1);
 	outputMatrixToFile(fout, this->theta2);
-	outputMatrixToFile(fout, this->theta3);
 }
 
 double Player::quickSigmoid(double x) {
@@ -135,11 +129,7 @@ void Player::makeMove(int board[][3], int player, double output[]) {
 	    inputVector.set(0, i+1, secondLayer.get(0, i));
     }
 
-    Matrix thirdLayer = applySigmoid(inputVector.rightMultiply(theta2));
-	for(int i = 0; i < 18; i++) {
-	    inputVector.set(0, i+1, thirdLayer.get(0, i));
-    }
-    Matrix outputLayer = applySigmoid(inputVector.rightMultiply(theta3));
+    Matrix outputLayer = applySigmoid(inputVector.rightMultiply(theta2));
 
     //copy result into output "vector"
     for(int i = 0; i < 9; i++)

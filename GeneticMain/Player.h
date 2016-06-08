@@ -33,7 +33,6 @@ private:
       Matrix applySigmoid(Matrix m);
       Matrix theta1;
       Matrix theta2;
-      Matrix theta3;
 };
 
 #endif
