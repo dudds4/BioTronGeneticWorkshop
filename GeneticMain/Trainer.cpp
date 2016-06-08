@@ -13,13 +13,14 @@ Player* Trainer::createOptimizedPlayer() {
  
     BoardGenerator boardGen;
     int boardInput[3][3];
-    int output[9];
+    int scoreMap[3][3];
+    double output[9];
 	for (int i=0; i<1500; i++) {
         int numMoves = i%9;
         //Generate Random Board
         boardGen.generateBoard(boardInput, numMoves);
         //Generate Expected Output Score Map
-        
+        boardGen.generateScoreMap(boardInput, scoreMap, (numMoves%2) + 1);
         //Player plays on board
         p->makeMove(boardInput, (numMoves%2) + 1, output);
         //multiply output matrix term by term with output score map
