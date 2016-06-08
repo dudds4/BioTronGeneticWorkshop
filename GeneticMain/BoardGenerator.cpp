@@ -54,12 +54,23 @@ void BoardGenerator::genBoard(int boardOut[][3], int numMoves, bool playerOneFir
     }
 }
 
-void BoardGenerator::generateScoreMap(int boardIn[][3], int scoreBoard[][3], int player) {
+void BoardGenerator::generateScoreMap(int boardIn[][3], float scoreBoard[][3], int player) {
+    float score, sum=0;
+    // Calculate desirability of each location on the board
     for (int i=0; i<9; i++) {
         if (simulateBoard(&boardIn, i, player)) {
-            scoreBoard[i/3][i%3] = getScore(boardIn, player);
+            score = getScore(boardIn, player);
+            scoreBoard[i/3][i%3] = score;
+            sum += score;
             clearSimulation(&boardIn, i);
+        } else {
+            scoreBoard[i/3][i%3] = -1000;
         }
+    }
+
+    //Normalize the board such that the sum of viable entries is 1
+    for (int i=0; i<9; i++) {
+        scoreBoard[i/3][i%3] /= sum;
     }
 }
 
@@ -188,9 +199,10 @@ int getConsecutiveNegativeDiagonal(int board[][3], int i, int j) {
     return consecutive;
 }
 
-//4 in a row -> 10000 points
-//3 in a row -> 600 points
-//2 in a row -> 150 points
+//Option 1: Getting 3 in a row (1000 points)
+//Option 2: Blocking a 3 in a row (200 points)
+//Option 3: Getting two 2 in a row
+//2 in a row -> 600 points
 //Opponent 3 in a row -> -700 points
 //Opponent 2 in a row -> -200 points
 int getScore(int board[][3], int player) {
@@ -205,33 +217,33 @@ int getScore(int board[][3], int player) {
         for (int j=0; j<3; j++) {
             if (boardCopy[i][j] == player) {
                 consecutive = getConsecutiveHorizontal(boardCopy, i, j);
-                if (consecutive == 3) score += 100000;
-                if (consecutive == 2) score += 600;
+                if (consecutive == 3) score += 1000;
+                if (consecutive == 2) score += 60;
                 consecutive = getConsecutiveVertical(boardCopy, i, j);
-                if (consecutive == 3) score += 10000;
-                if (consecutive == 2) score += 600;
+                if (consecutive == 3) score += 100;
+                if (consecutive == 2) score += 60;
                 consecutive = getConsecutivePositiveDiagonal(boardCopy, i, j);
-                if (consecutive == 3) score += 10000;
-                if (consecutive == 2) score += 600;
+                if (consecutive == 3) score += 100;
+                if (consecutive == 2) score += 60;
                 consecutive = getConsecutiveNegativeDiagonal(boardCopy, i, j);
-                if (consecutive == 3) score += 100000;
-                if (consecutive == 2) score += 600;
+                if (consecutive == 3) score += 1000;
+                if (consecutive == 2) score += 60;
             } else if (boardCopy[i][j] != 0) {
                 consecutive = getConsecutiveHorizontal(boardCopy, i, j);
-                if (consecutive == 3) score -= 20000;
-                if (consecutive == 2) score -= 700;
+                if (consecutive == 3) score -= 300;
+                if (consecutive == 2) score -= 70;
                 consecutive = getConsecutiveVertical(boardCopy, i, j);
-                if (consecutive == 3) score -= 20000;
-                if (consecutive == 2) score -= 700;
+                if (consecutive == 3) score -= 300;
+                if (consecutive == 2) score -= 70;
                 consecutive = getConsecutivePositiveDiagonal(boardCopy, i, j);
-                if (consecutive == 3) score -= 20000;
-                if (consecutive == 2) score -= 700;
+                if (consecutive == 3) score -= 300;
+                if (consecutive == 2) score -= 70;
                 consecutive = getConsecutiveNegativeDiagonal(boardCopy, i, j);
-                if (consecutive == 3) score -= 20000;
-                if (consecutive == 2) score -= 700;
+                if (consecutive == 3) score -= 300;
+                if (consecutive == 2) score -= 70;
             }
             boardCopy[i][j] *= -1; //Marks that it has already been counted (no effect on empty tile cuz duh)
         }
     }
-    return score;
+    return score+300; //300 bias to keep score positive
 }
