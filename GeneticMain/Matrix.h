@@ -7,7 +7,7 @@ public:
 	~Matrix();
 
 	int get(int, int) const;
-	bool set(int, int, int);
+	bool set(int, int, float);
 
 	int numRows() const;
 	int numCols() const;

@@ -25,6 +25,14 @@ public:
 	
 	void makeMove(int[][3], int, double[]);
       //----------------------------//
+
+    Matrix getTheta1();
+    Matrix getTheta2();
+    bool setTheta1(Matrix m);
+    bool setTheta1(int row, int col, double val);
+    bool setTheta2(Matrix m);
+    bool setTheta2(int row, int col, double val);
+    
 private:
       static Matrix randomMatrix(int, int);
 	  void outputMatrixToFile(std::ostream &out, Matrix m); 

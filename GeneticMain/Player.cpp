@@ -14,6 +14,37 @@ theta2(19, 9) {
 //  Instantiates a new Player
 }
 
+Matrix Player::getTheta1() {
+    return theta1;
+}
+
+Matrix Player::getTheta2() {
+    return theta2;
+}
+
+bool Player::setTheta1(Matrix m) {
+    if(m.numRows() != 19 || m.numCols() != 18) return false;
+    theta1 = m;
+    return true;
+}
+bool Player::setTheta2(Matrix m) {
+    if(m.numRows() != 19 || m.numCols() != 9) return false;
+    theta2 = m;
+    return true;
+}
+bool Player::setTheta1(int row, int col, double val) {
+    if(row < 0 || row >= theta1.numRows()) return false;
+    if(col < 0 || col >= theta1.numCols()) return false;
+    theta1.set(row, col, val);
+    return true;
+}
+bool Player::setTheta2(int row, int col, double val) {
+    if(row < 0 || row >= theta2.numRows()) return false;
+    if(col < 0 || col >= theta2.numCols()) return false;
+    theta2.set(row, col, val);
+    return true;
+}
+
 Player* Player::copy() {
 	Player* newPlayer = new Player();
 	*(newPlayer) = *(this);

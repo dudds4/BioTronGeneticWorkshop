@@ -46,7 +46,7 @@ int Matrix::get(int row, int column) const {
 	return data[row * m_columns + column];
 }
 
-bool Matrix::set(int row, int column, int value) {
+bool Matrix::set(int row, int column, float value) {
 	if(row < 0 || row >= m_rows || column < 0 || column >= m_columns) return false;
 	data[row * m_columns + column] = value;
 	return true;
