@@ -1,4 +1,3 @@
-#include "GameSimulator.h"
 #include "globals.cpp"
 #include "Trainer.h"
 #include "Player.h"
@@ -49,49 +48,106 @@ int Trainer::simulateGames(Player* player1, Player* player2, int numGames) {
 	return player1Wins;
 }
 
+//double fitnessScore(AbstractPlayer* p) { 
+//    p->setId(1); 
+//    //test board inputs
+//    double inputSets[9][24] = { 
+//                                0, 0, 0, 
+//                                0, 0, 0, 
+//                                0, 0, 0,
+//                                /*----*/
+//                                0, 0, 0, 
+//                                0, 2, 0, 
+//                                0, 0, 0,
+//                                /*----*/
+//                                2, 0, 0, 
+//                                0, 0, 0, 
+//                                0, 0, 0,
+//                                /*----*/
+//                                0, 0, 2, 
+//                                0, 0, 0, 
+//                                0, 0, 0,
+//                                /*----*/
+//                                0, 0, 0, 
+//                                0, 0, 0, 
+//                                0, 0, 2,
+//                                /*----*/
+//                                0, 0, 0, 
+//                                0, 0, 0, 
+//                                2, 0, 0,
+//                                /*----*/
+//                                0, 0, 0, 
+//                                0, 0, 0, 
+//                                0, 0, 0,
+//                                /*----*/
+//                                0, 0, 0, 
+//                                0, 0, 0, 
+//                                0, 0, 0,
+//                                /*----*/
+//                                0, 0, 0, 
+//                                0, 0, 0, 
+//                                0, 0, 0,
+//                                /*----*/
+//                                0, 0, 0, 
+//                                0, 0, 0, 
+//                                0, 0, 0,
+//                                /*----*/
+//                                0, 0, 0, 
+//                                0, 0, 0, 
+//                                0, 0, 0,
+//                                /*----*/
+//                                0, 0, 0, 
+//                                0, 0, 0, 
+//                                0, 0, 0,
+//                                /*----*/
+//                                0, 0, 0, 
+//                                0, 0, 0, 
+//                                0, 0, 0,
+//                                /*----*/
+//                                0, 0, 0, 
+//                                0, 0, 0, 
+//                                0, 0, 0,
+//                                /*----*/
+//                                 };
+//    
+//}
+
 void Trainer::starTrekNextGeneration() {
 	srand(time(0));
 	int numIndividuals = playerPool.size();
 	float leastFitness = 0, fitnessSum = 0;
-	
-//	std::cout << "numIndividuals: " <<  numIndividuals << std::endl;
 
+    //Players are tested, we generate a fitness score based on their reaction to certain boards
 	for (int i=0; i<numIndividuals; i++) {
-
 		for (int j=0; j<numIndividuals; j++) {
 			if(i!=j) {
 
 				Match* matchUp = new Match(playerPool[i], playerPool[j]);
-					
-	//			std::cout << "About to play out match \n";
 				matchUp->playOut();
-				//std::cout << "Match played out successfully. (" << i << ", " << j <<  ")\n";
 				statsPool[i].addMatchStats(matchUp, playerPool[i]);
 				statsPool[j].addMatchStats(matchUp, playerPool[j]);
-	//			std::cout << "Match Stats added successfully.\n";
-				
 			}
 		}
-		//std::cout << "Player " << i << " played out matches \n";
 	}
-//	std::cout << "Matches played. \n";
+
+    //normalize fitness values
+    //find least value of fitness
+    for(int i = 0; i < numIndividuals; i++) {
+        playerPool[i]->fitness = statsPool[i].getFitness();
+        fitnessSum += playerPool[i]->fitness;
+        if (playerPool[i]->fitness < leastFitness || i == 0) {
+            leastFitness = playerPool[i]->fitness;
+        }
+    }
 	
-	for (int i=0; i<numIndividuals; i++) {
-		playerPool[i]->fitness = statsPool[i].getFitness();
-//		std::cout << "playerPool[" << i << "] fitness: " << playerPool[i]->fitness << std::endl;
-		fitnessSum += playerPool[i]->fitness;
-		if (playerPool[i]->fitness < leastFitness || i == 0) {
-			leastFitness = playerPool[i]->fitness;
-		}
-	}
-//	std::cout << "Fitnesses computed. \n";
-	
+    //shift values over so that least fitness value is zero
+    //then divide by fitness sum
+    //this way all the fitnesses sum to 1
 	fitnessSum += (-1)*leastFitness*numIndividuals;
 	for (int i=0; i<numIndividuals; i++) {
 		playerPool[i]->fitness = (playerPool[i]->fitness - leastFitness)/fitnessSum;
 	}
 	std::sort(playerPool.begin(), playerPool.end(), compare);
-//	std::cout << "Player pool sorted. \n";
 
 	std::vector <Player*> newPool;
 	for (int i=0; i<numIndividuals/4; i++) {
@@ -129,7 +185,6 @@ void Trainer::starTrekNextGeneration() {
 		delete (player);
 	}
 	playerPool = newPool;
-//	std::cout << "New pool created. \n";
 
 	for(unsigned int i = 0; i < statsPool.size(); i++)
 		statsPool[i] = PlayerStats();

@@ -11,7 +11,7 @@ public:
 
 	float fitness;
 	
-	int makeMove(int[][7], int);
+	void makeMove(int[][7], int, double[]);
 	
 	/*-------------------SIMPLE ITERATIVE GAME STRATEGY-------------------------*/
 

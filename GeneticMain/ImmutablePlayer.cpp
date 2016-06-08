@@ -16,23 +16,30 @@ ImmutablePlayer::ImmutablePlayer(int _skill) {
 	skill = _skill;
 }
 
-int ImmutablePlayer::makeMove(int board[][7], int player) {
-	switch (skill) {
-		case 0:
-			return rand()%7;
-		case 1:
-			return makeMove1(board, player);
-		case 2:
-			return makeMove1random(board, player);
-		case 3:
-			return makeMove2(board, player);
-		case 4:
-			return makeMove2smart(board, player);
-		case 5:
-			return makeMove2adaptive(board, player);
-		default:
-			return makeMoveN(board, player, skill-3); //skill level 6 looks 3 moves ahead, level 7 looks 4, and level 8 looks 5
+void ImmutablePlayer::makeMove(int board[][7], int player, double output[]) {
+    int chosen;
+
+    switch (skill) {
+        case 0:
+            chosen=rand()%7;
+        case 1:
+            chosen=makeMove1(board, player);
+        case 2:
+            chosen=makeMove1random(board, player);
+        case 3:
+            chosen=makeMove2(board, player);
+        case 4:
+            chosen=makeMove2smart(board, player);
+        case 5:
+            chosen=makeMove2adaptive(board, player);
+        default:
+            chosen=makeMoveN(board, player, skill-3); //skill level 6 looks 3 moves ahead, level 7 looks 4, and level 8 looks 5
 	}
+
+    for(int i = 0; i < 9; i++)
+        output[i] = (i == chosen) ? 1 : 0;
+
+    return; 
 }
 
 
