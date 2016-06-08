@@ -1,33 +1,34 @@
 #include "globals.cpp"
 #include "Trainer.h"
 #include "Player.h"
+#include "BoardGenerator.h"
 #include <algorithm>
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
 
 Player* Trainer::createOptimizedPlayer() {
-	generatePlayerPool();
-	for (int i=0; i<GENERATIONS; i++) {
-		std::cout << "100 years later... [Generation " << i+1 << " ]\n";
-		starTrekNextGeneration();
-		std::cout << std::flush;
-	}
-	std::cout << "Finished all dat crazy generation shizz \n";
-	Player* bestPlayer = playerPool[0];
-	Player* secondBestPlayer = playerPool[1];
-	for (int i=1; i<POOL_SIZE; i++) {
-		if (simulateGames(playerPool[i], bestPlayer, GAMES_PER_MATCH) > GAMES_PER_MATCH/2) {
-			secondBestPlayer = bestPlayer;
-			bestPlayer = playerPool[i];
-		}
+    //Generate One player
+    Player* p = Player::random();
+ 
+    BoardGenerator boardGen;
+    int boardInput[3][3];
+    int output[9];
+	for (int i=0; i<1500; i++) {
+        int numMoves = i%9;
+        //Generate Random Board
+        boardGen.generateBoard(boardInput, numMoves);
+        //Generate Expected Output Score Map
+        
+        //Player plays on board
+        p->makeMove(boardInput, (numMoves%2) + 1, output);
+        //multiply output matrix term by term with output score map
+        //Backprop
+
+        //change player slightly
 	}
 
-	std::cout << "Optimized players match up \n";
-	Match m(bestPlayer, secondBestPlayer);
-	m.playOutVerbose();
-
-	return bestPlayer;
+	return p;
 }
 
 void Trainer::generatePlayerPool() {
@@ -47,70 +48,6 @@ int Trainer::simulateGames(Player* player1, Player* player2, int numGames) {
 	}
 	return player1Wins;
 }
-
-//double fitnessScore(AbstractPlayer* p) { 
-//    p->setId(1); 
-//    //test board inputs
-//    double inputSets[9][24] = { 
-//                                0, 0, 0, 
-//                                0, 0, 0, 
-//                                0, 0, 0,
-//                                /*----*/
-//                                0, 0, 0, 
-//                                0, 2, 0, 
-//                                0, 0, 0,
-//                                /*----*/
-//                                2, 0, 0, 
-//                                0, 0, 0, 
-//                                0, 0, 0,
-//                                /*----*/
-//                                0, 0, 2, 
-//                                0, 0, 0, 
-//                                0, 0, 0,
-//                                /*----*/
-//                                0, 0, 0, 
-//                                0, 0, 0, 
-//                                0, 0, 2,
-//                                /*----*/
-//                                0, 0, 0, 
-//                                0, 0, 0, 
-//                                2, 0, 0,
-//                                /*----*/
-//                                0, 0, 0, 
-//                                0, 0, 0, 
-//                                0, 0, 0,
-//                                /*----*/
-//                                0, 0, 0, 
-//                                0, 0, 0, 
-//                                0, 0, 0,
-//                                /*----*/
-//                                0, 0, 0, 
-//                                0, 0, 0, 
-//                                0, 0, 0,
-//                                /*----*/
-//                                0, 0, 0, 
-//                                0, 0, 0, 
-//                                0, 0, 0,
-//                                /*----*/
-//                                0, 0, 0, 
-//                                0, 0, 0, 
-//                                0, 0, 0,
-//                                /*----*/
-//                                0, 0, 0, 
-//                                0, 0, 0, 
-//                                0, 0, 0,
-//                                /*----*/
-//                                0, 0, 0, 
-//                                0, 0, 0, 
-//                                0, 0, 0,
-//                                /*----*/
-//                                0, 0, 0, 
-//                                0, 0, 0, 
-//                                0, 0, 0,
-//                                /*----*/
-//                                 };
-//    
-//}
 
 void Trainer::starTrekNextGeneration() {
 	srand(time(0));
