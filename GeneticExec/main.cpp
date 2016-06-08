@@ -1,12 +1,13 @@
 #include "Trainer.h"
 #include "ImmutablePlayer.h"
 #include "Match.h"
+#include "NeuralNet.h"
 #include <iostream>
 
 using namespace std;
 
 int main() {
-  
+
 	Trainer ash_ketchum;
 	Player* pikachu = ash_ketchum.createOptimizedPlayer();
 	std::cout << "Made out of optimization. \n";

@@ -12,23 +12,31 @@ Player* Trainer::createOptimizedPlayer() {
 	for (int i=0; i<GENERATIONS; i++) {
 		std::cout << "100 years later... [Generation " << i+1 << " ]\n";
 		starTrekNextGeneration();
+        if (i%20 == 19) {
+            demonstrateGeneration();
+        }
 		std::cout << std::flush;
 	}
 	std::cout << "Finished all dat crazy generation shizz \n";
-	Player* bestPlayer = playerPool[0];
-	Player* secondBestPlayer = playerPool[1];
-	for (int i=1; i<POOL_SIZE; i++) {
-		if (simulateGames(playerPool[i], bestPlayer, GAMES_PER_MATCH) > GAMES_PER_MATCH/2) {
-			secondBestPlayer = bestPlayer;
-			bestPlayer = playerPool[i];
-		}
-	}
+    
+    return demonstrateGeneration();
+}
 
-	std::cout << "Optimized players match up \n";
-	Match m(bestPlayer, secondBestPlayer);
-	m.playOutVerbose();
-
-	return bestPlayer;
+Player* Trainer::demonstrateGeneration() {
+    Player* bestPlayer = playerPool[0];
+    Player* secondBestPlayer = playerPool[1];
+    for (int i=1; i<POOL_SIZE; i++) {
+        if (simulateGames(playerPool[i], bestPlayer, GAMES_PER_MATCH) > GAMES_PER_MATCH/2) {
+            secondBestPlayer = bestPlayer;
+            bestPlayer = playerPool[i];
+        }
+    }
+    
+    std::cout << "Optimized players match up \n";
+    Match m(bestPlayer, secondBestPlayer);
+    m.playOutVerbose();
+    
+    return bestPlayer;
 }
 
 void Trainer::generatePlayerPool() {
@@ -126,7 +134,7 @@ void Trainer::starTrekNextGeneration() {
 	while (playerPool.size() > 0) {
 		player = playerPool.back();
 		playerPool.pop_back();
-		delete (player);
+		//delete (player);
 	}
 	playerPool = newPool;
 //	std::cout << "New pool created. \n";

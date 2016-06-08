@@ -24,6 +24,7 @@ private:
 	std::vector<Player*> playerPool;
 	std::vector<PlayerStats> statsPool;
 
+    Player* demonstrateGeneration();
 	void generatePlayerPool();
 	int simulateGames(Player* player1, Player* player2, int numGames);
 	void starTrekNextGeneration();

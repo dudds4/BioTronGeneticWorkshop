@@ -2,32 +2,16 @@
 #define PLAYER_H
 
 #include "AbstractPlayer.h"
+#include "NeuralNet.h"
 
 class Player : public AbstractPlayer {
-	class Neuron {
-	public:
-		Neuron();
-		Neuron(int, int);
-		void mutate();
-		int value;
-		int numInputs, numOutputs;
-		int* outputWeights;
-		int* inputWeights;
-	};
-	class Brain {
-	public:
-		Brain();
-		int in, out, size;
-		void init(int, int, int);
-		void execute(int in[], int, int out[], int);
-		Neuron *neurons;
-	};
-	Brain brain1, brain2, brain3;
+	NeuralNet* brain;
 public:
 	double fitness;
 	Player();
 	Player(bool init);
 	Player(std::string);
+	~Player();
 	
 	Player* mutate();
 	Player* copy();
