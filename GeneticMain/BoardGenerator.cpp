@@ -5,7 +5,7 @@ BoardGenerator::BoardGenerator(){
     srand(time(0));
 }
 
-void BoardGenerator::generateBoard(int boardOut[][3], int numMoves, bool playerOneFirst){
+void BoardGenerator::generateBoard(int boardOut[][3], int numMoves, bool playerOneFirst=true){
     genBoard(boardOut, numMoves, playerOneFirst);
 }
 
