@@ -39,8 +39,8 @@ QVariantList BoardController::gameBoard() {
 }
 
 void BoardController::initializeMatchAndPlayers() {
-    p1 = Player::fromFile("p1File.txt");
-    p2 = Player::fromFile("p2File.txt");
+    p1 = Player1::fromFile("p1File.txt");
+    p2 = Player2::fromFile("p2File.txt");
 
     internalMatch.setPlayer1(p1);
     internalMatch.setPlayer2(p2);

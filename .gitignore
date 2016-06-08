@@ -1,2 +1,4 @@
 build/
 *~
+build-Connect4_POC-Desktop_Qt_5_5_1_MinGW_32bit-Debug/
+gui/Connect4_POC.pro.user
